@@ -107,7 +107,7 @@ final _controladorPrueba = TextEditingController();
   flex: 1,
   child: Container(
     color: Colors.blueAccent,
-    height: 50, // Ajusta la altura de la barra aquí
+    height: 50, 
     child: _barraMenu(context),
   ),
 ),
@@ -121,14 +121,14 @@ Widget _barraMenu(BuildContext context) {
   List<bool> states = List.filled(menus.length, false);
   return Container(
     color: Colors.blueAccent,
-    height: 50, // Ajusta la altura de la barra aquí
+    height: 50, 
     child: SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center, // Alinea los elementos al centro horizontalmente
+        mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(menus.length, (index) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0), // Ajusta el valor de padding según tu preferencia
+            padding: const EdgeInsets.symmetric(horizontal: 40.0), 
             child: InkWell(
               onTap: () {
                 _onMenuTapped(menus[index]['menu']);
