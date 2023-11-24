@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
-import 'package:personal_proyecto/models/UserModel.dart';
+import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/screens/page1.dart';
 import 'package:personal_proyecto/util/utils.dart';
 import 'package:personal_proyecto/widgets/personalizados.dart';
@@ -20,8 +20,8 @@ class _BusquedasState extends State<Busquedas> {
   var eventsBloc;
   var usuariosBloc;
   var user_sesionBloc;
-  List<User> users = [];
-  late User hola;
+  List<Estudiantes> users = [];
+  late Estudiantes hola;
   final _tbxController = TextEditingController();
 
   @override

@@ -1,4 +1,4 @@
-part of 'user_bloc.dart';
+part of 'estudiantes_bloc.dart';
 
 @immutable
 abstract class UserEvent {}
@@ -6,6 +6,6 @@ abstract class UserEvent {}
 class InitialUserEvent extends UserEvent {}
 
 class ActivateUserEvent extends UserEvent {
-  final User user;
+  final Estudiantes user;
   ActivateUserEvent(this.user);
 }

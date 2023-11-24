@@ -2,8 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/Login/login_bloc.dart';
-import 'package:personal_proyecto/blocs/user/user_bloc.dart';
-import 'package:personal_proyecto/models/UserModel.dart';
+import 'package:personal_proyecto/blocs/estudiantes/estudiantes_bloc.dart';
+import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/models/loginModel.dart';
 import 'package:personal_proyecto/screens/home.dart';
 import 'package:personal_proyecto/services/loginService.dart';
@@ -14,8 +14,8 @@ class Login extends StatelessWidget {
   Utils util = Utils();
 
   final _formKey = GlobalKey<FormState>();
-  final correoController = TextEditingController();
-  final passwordController = TextEditingController();
+  final correoController = TextEditingController(text: 'user@email.com');
+  final passwordController = TextEditingController(text: '12345');
 
   final nombreController = TextEditingController();
   final apellidoController = TextEditingController();
@@ -126,21 +126,25 @@ class Login extends StatelessWidget {
                             final user = await LoginService()
                                 .usuarioActual(jwtResponse.token);
 
-                            final newUser = User(
+                            final newUser = Estudiantes(
+                              codigo: user.codigo,
                               nombre: user.nombre,
                               apellido: user.apellido,
                               rol: user.rol,
                               email: user.email,
+                              clave: user.clave,
                               token: user.token,
                             );
 
                             userBloc.add(ActivateUserEvent(newUser));
+print('Respuesta del usuario actual: ${user}');
 
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) => Home()),
                               (Route<dynamic> route) => false,
                             );
                           } catch (error) {
+                            print(error);
                             util.message(
                                 context, error.toString(), Colors.orange);
                           }

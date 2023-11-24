@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
-import 'package:personal_proyecto/models/UserModel.dart';
+import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/screens/page1.dart';
 import 'package:personal_proyecto/util/utils.dart';
 
@@ -21,8 +21,8 @@ class _AgregarProductoState extends State<AgregarProducto> {
   var eventsBloc;
   var usuariosBloc;
   var user_sesionBloc;
-  List<User> users = [];
-  late User hola;
+  List<Estudiantes> users = [];
+  late Estudiantes hola;
   final mensajeController = TextEditingController();
   late File _imageFile;
 
@@ -158,7 +158,7 @@ class _AgregarProductoState extends State<AgregarProducto> {
               final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
               if (image != null) {
                 setState(() {
-                  _imageFile = File(image.path); // Almacena la imagen en la variable File
+                  _imageFile = File(image.path); 
                    print('Ruta de la imagen: ${_imageFile.path}');
                 });
               }
