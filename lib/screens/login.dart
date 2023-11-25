@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/Login/login_bloc.dart';
-import 'package:personal_proyecto/blocs/estudiantes/estudiantes_bloc.dart';
+import 'package:personal_proyecto/blocs/user/user_bloc.dart';
 import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/models/loginModel.dart';
 import 'package:personal_proyecto/screens/home.dart';
@@ -137,7 +137,7 @@ class Login extends StatelessWidget {
                             );
 
                             userBloc.add(ActivateUserEvent(newUser));
-print('Respuesta del usuario actual: ${user}');
+                            print('Respuesta del usuario actual: ${user}');
 
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) => Home()),

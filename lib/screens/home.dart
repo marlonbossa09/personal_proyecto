@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:personal_proyecto/blocs/estudiantes/estudiantes_bloc.dart';
 import 'dart:math' as math;
 
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
+import 'package:personal_proyecto/blocs/user/user_bloc.dart';
 import 'package:personal_proyecto/screens/agregarProducto.dart';
 import 'package:personal_proyecto/screens/busquedas.dart';
 import 'package:personal_proyecto/screens/comentarios.dart';
+import 'package:personal_proyecto/screens/crearProducto.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
 
 
@@ -53,11 +54,34 @@ final _controladorPrueba = TextEditingController();
     {
       'titulo': 'Perfil',
       'icono': const Icon(Icons.person),
-      'menu': {'route': AgregarProducto()},
+      'menu': {'route': CrearProducto(editar: false,)},
       'pos': 2,
       'roles': 'A,V,L'
     }
   ];
+
+  Widget _botonNuevo(Map menu) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          eventsBloc.add(ChangeStateMenu([
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+          ], menu));
+        },
+        style: ElevatedButton.styleFrom(
+          shadowColor: Colors.green,
+          primary: Colors.green,
+        ),
+        child: const Text('Nuevo'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:personal_proyecto/blocs/estudiantes/estudiantes_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/productos/productos_bloc.dart';
+import 'package:personal_proyecto/blocs/user/user_bloc.dart';
 import 'package:personal_proyecto/models/ProductosModel.dart';
 import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/screens/page1.dart';
@@ -183,13 +183,17 @@ class _PublicacionesState extends State<Publicaciones> {
                   '${productos.nombre}',
                   style: TextStyle(fontSize: 15),
                 ),
+                Text(
+                  ' ${productos.descripcion}',
+                  style: TextStyle(fontSize: 15),
+                ),
                 SizedBox(height: 10),
                 Text(
-                  '*Precio: ${productos.precio}',
+                  'Precio: ${productos.precio}',
                   style: TextStyle(fontSize: 15),
                 ),
                 Text(
-                  '*Cantidad disponible: ${productos.cantidad}',
+                  'Cantidad disponible: ${productos.cantidad}',
                   style: TextStyle(fontSize: 15),
                 ),
                 SizedBox(height: 10),

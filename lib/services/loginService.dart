@@ -12,7 +12,7 @@ class LoginService {
   final String USUARIOACTUAL = '/estudiantes/actual';
   final String RENEWTOKEN = '/refresh';
 
-  Future<JwtResponse> iniciarSesion(String email, String clave) async {
+  Future<Estudiantes> iniciarSesion(String email, String clave) async {
     final response = await http.post(
       Uri.parse('$URL$LOGIN'),
       headers: <String, String>{
@@ -24,7 +24,7 @@ class LoginService {
     );
     print(response.body);
     if (response.statusCode == 200 || response.statusCode == 400) {
-      return JwtResponse.fromJson(jsonDecode(response.body));
+      return Estudiantes.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Ocurrió un error durante el inicio de sesión.');
     }
@@ -37,9 +37,24 @@ class LoginService {
   );
 
   if (response.statusCode == 200 || response.statusCode == 403) {
-    return Estudiantes.fromJson(jsonDecode(response.body));
+    dynamic respuesta = jsonDecode(response.body);
+    if (respuesta is List) {
+      if (respuesta.isNotEmpty) {
+        Map<String, dynamic> userMap = Map<String, dynamic>.from(respuesta[0]);
+        userMap.addAll({"token": token});
+        return Estudiantes.fromJson(userMap);
+      } else {
+        throw Exception('No se encontró ningún usuario con el ID proporcionado.');
+      }
+    } else if (respuesta is Map) {
+      Map<String, dynamic> stringMap = Map<String, dynamic>.from(respuesta);
+      stringMap.addAll({"token": token});
+      return Estudiantes.fromJson(stringMap);
+    } else {
+      throw Exception('El formato de respuesta no es válido.');
+    }
   } else {
-    throw Exception('Ocurrió un error.');
+    throw Exception('Ocurrió un error');
   }
 }
 

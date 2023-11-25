@@ -1,12 +1,14 @@
 class ProductosModel {
   final int id;
   final String nombre;
-  final int cantidad;
-  final double precio; 
+  final String descripcion;
+  final String cantidad;
+  final String precio; 
 
   const ProductosModel({
     required this.id,
     required this.nombre,
+    required this.descripcion,
     required this.cantidad,
     required this.precio, 
   });
@@ -15,8 +17,9 @@ class ProductosModel {
   return ProductosModel(
     id: json['id'] ?? 0,
     nombre: json['nombre'] ?? "",
-    cantidad: json['cantidad'] ?? 0,
-    precio: json['precio'] ?? 0.0,
+    descripcion: json['descripcion'] ?? "",
+    cantidad: json['cantidad'] ?? "",
+    precio: json['precio'] ?? "",
   );
 }
 
