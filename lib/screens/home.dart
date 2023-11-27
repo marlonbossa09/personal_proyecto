@@ -9,6 +9,7 @@ import 'package:personal_proyecto/screens/busquedas.dart';
 import 'package:personal_proyecto/screens/comentarios.dart';
 import 'package:personal_proyecto/screens/crearProducto.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
+import 'package:personal_proyecto/screens/usuarios.dart';
 
 
 
@@ -47,7 +48,7 @@ final _controladorPrueba = TextEditingController();
     {
       'titulo': 'Crear Producto',
       'icono': const Icon(Icons.notifications),
-      'menu': {'route': Comentarios()},
+      'menu': {'route': Usuarios()},
       'pos': 2,
       'roles': 'A,V,L'
     },
