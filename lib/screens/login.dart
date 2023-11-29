@@ -71,7 +71,7 @@ class Login extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 40.0),
                   child: Text(
-                    'SMART GUARD',
+                    'BAYOU',
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.blue,

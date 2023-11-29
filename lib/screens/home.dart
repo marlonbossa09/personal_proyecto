@@ -8,10 +8,9 @@ import 'package:personal_proyecto/screens/agregarProducto.dart';
 import 'package:personal_proyecto/screens/busquedas.dart';
 import 'package:personal_proyecto/screens/comentarios.dart';
 import 'package:personal_proyecto/screens/crearProducto.dart';
+import 'package:personal_proyecto/screens/perfilUsuario.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
 import 'package:personal_proyecto/screens/usuarios.dart';
-
-
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -27,7 +26,7 @@ class _HomeState extends State<Home> {
 
   List<bool> states = [];
 
-final _controladorPrueba = TextEditingController();
+  final _controladorPrueba = TextEditingController();
   List<bool> select = [false, false];
 
   List<Map<String, dynamic>> menus = [
@@ -55,7 +54,11 @@ final _controladorPrueba = TextEditingController();
     {
       'titulo': 'Perfil',
       'icono': const Icon(Icons.person),
-      'menu': {'route': CrearProducto(editar: false,)},
+      'menu': {
+        'route': CrearProducto(
+          editar: false,
+        )
+      },
       'pos': 2,
       'roles': 'A,V,L'
     }
@@ -102,16 +105,16 @@ final _controladorPrueba = TextEditingController();
               label: const Text('Editar Perfil',
                   style: TextStyle(color: Color.fromARGB(171, 0, 0, 0))),
               onPressed: () {
-                 eventsBloc.add(ChangeStateMenu([
-              false,
-              true,
-              false,
-              false,
-              false,
-              false,
-            ], {
-         //     'route': PerfilUsuario()
-            }));
+                eventsBloc.add(ChangeStateMenu([
+                  false,
+                  true,
+                  false,
+                  false,
+                  false,
+                  false,
+                ], {
+                  'route': PerfilUsuario()
+                }));
               }),
           TextButton.icon(
               icon: const Icon(Icons.exit_to_app, color: Colors.blue),
@@ -127,7 +130,7 @@ final _controladorPrueba = TextEditingController();
             return Row(
               children: [
                 SizedBox(width: 10),
-              /*  Text(
+                /*  Text(
                   'CONTAWEB',
                   style: TextStyle(
                     fontSize: 20,
@@ -154,74 +157,75 @@ final _controladorPrueba = TextEditingController();
         ),
       ),
       body: Column(
-      children: [
-        BlocBuilder<EventsBloc, EventsState>(
-          builder: (context, state) {
-            var route;
-            state.menu.forEach((key, value) {
-              if (key.toString().contains('route')) {
-                route = value;
-              }
-            });
-            return route;
-          },
-        ),
-       Expanded(
-  flex: 1,
-  child: Container(
-    color: Colors.blueAccent,
-    height: 50, 
-    child: _barraMenu(context),
-  ),
-),
-
-      ],
-    ),
+        children: [
+          BlocBuilder<EventsBloc, EventsState>(
+            builder: (context, state) {
+              var route;
+              state.menu.forEach((key, value) {
+                if (key.toString().contains('route')) {
+                  route = value;
+                }
+              });
+              return route;
+            },
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.blueAccent,
+              height: 50,
+              child: _barraMenu(context),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
- Widget _barraMenu(BuildContext context) {
-  List<bool> states = List.filled(menus.length, false);
-  return Container(
-    color: Colors.blueAccent,
-    height: 50, 
-    child: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(menus.length, (index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0), 
-            child: InkWell(
-              onTap: () {
-                _onMenuTapped(menus[index]['menu']);
-              },
-              child: Icon(
-                menus[index]['icono'].icon,
-                size: 35,
-                color: states[index]
-                    ? const Color.fromRGBO(4, 142, 255, 1)
-                    : const Color.fromARGB(255, 5, 51, 88),
+  Widget _barraMenu(BuildContext context) {
+    List<bool> states = List.filled(menus.length, false);
+    return Container(
+      color: Colors.blueAccent,
+      height: 50,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(menus.length, (index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: InkWell(
+                onTap: () {
+                  _onMenuTapped(menus[index]['menu']);
+                },
+                child: Icon(
+                  menus[index]['icono'].icon,
+                  size: 35,
+                  color: states[index]
+                      ? const Color.fromRGBO(4, 142, 255, 1)
+                      : const Color.fromARGB(255, 5, 51, 88),
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
-    ),
-  );
-}
-
-void _onMenuTapped(Map menu) {
-  for (int i = 0; i < states.length; i++) {
-    states[i] = false;
+    );
   }
 
-  eventsBloc.add(ChangeStateMenu(states, menu));
-}
-  Widget _crearListitles(String titulo, Icon icono, Map menu, int j,bool bloc) {
+  void _onMenuTapped(Map menu) {
+    for (int i = 0; i < states.length; i++) {
+      states[i] = false;
+    }
+
+    eventsBloc.add(ChangeStateMenu(states, menu));
+  }
+
+  Widget _crearListitles(
+      String titulo, Icon icono, Map menu, int j, bool bloc) {
     return ListTile(
       leading: icono,
-      selected: bloc?states[j]:bloc,
+      selected: bloc ? states[j] : bloc,
       selectedColor: const Color.fromRGBO(4, 142, 255, 1),
       trailing: const Icon(
         Icons.arrow_right,
@@ -231,7 +235,7 @@ void _onMenuTapped(Map menu) {
       focusColor: Color.fromARGB(255, 236, 236, 236),
       title: Text(titulo, style: TextStyle(fontSize: 15)),
       onTap: () {
-        if(bloc){
+        if (bloc) {
           for (int i = 0; i < states.length; i++) {
             states[i] = false;
           }
@@ -240,11 +244,9 @@ void _onMenuTapped(Map menu) {
           select[1] = false;
 
           states[j] = true;
-          
         }
         eventsBloc.add(ChangeStateMenu(states, menu));
       },
     );
   }
-
 }
