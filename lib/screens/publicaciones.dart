@@ -7,6 +7,7 @@ import 'package:personal_proyecto/blocs/user/user_bloc.dart';
 import 'package:personal_proyecto/models/ProductosModel.dart';
 import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/screens/page1.dart';
+import 'package:personal_proyecto/screens/verProductos.dart';
 import 'package:personal_proyecto/services/productoService.dart';
 import 'package:personal_proyecto/util/utils.dart';
 
@@ -80,7 +81,7 @@ class _PublicacionesState extends State<Publicaciones> {
                   onPressed: () {
                     eventsBloc.add(ChangeStateMenu(
                         [true, true, false, false, false],
-                        {'route': Page1()}));
+                        {'route': Publicaciones()}));
                   },
                   icon: Icon(Icons.arrow_back),
                 ),
@@ -181,24 +182,28 @@ class _PublicacionesState extends State<Publicaciones> {
                 SizedBox(height: 10),
                 Text(
                   '${productos.nombre}',
-                  style: TextStyle(fontSize: 15),
-                ),
-                Text(
-                  ' ${productos.descripcion}',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
                 Text(
                   'Precio: ${productos.precio}',
                   style: TextStyle(fontSize: 15),
                 ),
-                Text(
-                  'Cantidad disponible: ${productos.cantidad}',
-                  style: TextStyle(fontSize: 15),
-                ),
                 SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {},
+                ElevatedButton( 
+                  onPressed: (){
+              eventsBloc.add(ChangeStateMenu([
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+              ], {
+                'route':
+                    VerProductos(id: productos.id,)
+              }));
+            },
                   style: ElevatedButton.styleFrom(
                     shadowColor: Colors.blue,
                     primary: Colors.blue,

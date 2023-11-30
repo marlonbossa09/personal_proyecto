@@ -7,6 +7,7 @@ import 'package:personal_proyecto/services/varGlobales.dart';
 class ProductoService {
   final String URL = VariablesGlobales().getUrlHttp();
   final String _OBTENER_PRODUCTO = '/productos';
+  final String _OBTENER_PRODUCTO_ID = '/productos/';
   final String _CREAR_PRODUCTO = '/productos/agregar';
   final String _EDITAR_EMPRESA = '';
 
@@ -41,6 +42,34 @@ class ProductoService {
   }
 }
 
+Future<ProductosModel> verProductoId(int id, String token) async {
+  final response = await http.get(
+    Uri.parse('$URL$_OBTENER_PRODUCTO_ID$id'),
+    headers: {
+      'Authorization': 'Bearer $token',
+      "Access-Control-Allow-Origin": "*",
+      'Accept': '*/*',
+      'Content-Type': 'application/json; charset=UTF-8'
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final dynamic responseBody = jsonDecode(response.body);
+    print(responseBody); // Imprime la respuesta para ver su estructura
+
+    if (responseBody != null) {
+      ProductosModel producto = ProductosModel.fromJson(responseBody);
+      return producto;
+    } else {
+      return ProductosModel(id: 0, nombre: '', descripcion: '', cantidad: '', precio: ''); // O puedes devolver null o lanzar una excepción según tus necesidades
+    }
+  } else {
+    throw Exception('Ocurrió un error. Código de estado: ${response.statusCode}');
+  }
+}
+
+
+  
 Future<Map<String, dynamic>> crearProducto(Map<String, dynamic> data, String token) async {
   try {
     final response = await http.post(

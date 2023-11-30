@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
       'icono': const Icon(Icons.notifications),
       'menu': {'route': Usuarios()},
       'pos': 2,
-      'roles': 'A,V,L'
+      'roles': 'A,V'
     },
     {
       'titulo': 'Perfil',
