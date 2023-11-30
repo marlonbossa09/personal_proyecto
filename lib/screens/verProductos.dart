@@ -5,7 +5,6 @@ import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
 import 'package:personal_proyecto/models/ProductosModel.dart';
 import 'package:personal_proyecto/models/EstudiantesModel.dart';
-import 'package:personal_proyecto/screens/page1.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
 import 'package:personal_proyecto/services/productoService.dart';
 import 'package:personal_proyecto/util/utils.dart';
@@ -37,21 +36,22 @@ class _VerProductosState extends State<VerProductos> {
   }
 
   void _cargarDatos() async {
-  try {
-    user_sesionBloc = BlocProvider.of<UserBloc>(context);
-    final state = user_sesionBloc.state;
+    try {
+      user_sesionBloc = BlocProvider.of<UserBloc>(context);
+      final state = user_sesionBloc.state;
 
-    final ProductosModel producto =
-        await ProductoService().verProductoId(widget.id, state.user!.token);
+      final ProductosModel producto =
+          await ProductoService().verProductoId(widget.id, state.user!.token);
 
-    setState(() {
-      productos = [producto]; // Puedes asignar el objeto a una lista de un solo elemento
-    });
-  } catch (error) {
-    print('Error al obtener el producto: $error');
+      setState(() {
+        productos = [
+          producto
+        ]; // Puedes asignar el objeto a una lista de un solo elemento
+      });
+    } catch (error) {
+      print('Error al obtener el producto: $error');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,79 +67,78 @@ class _VerProductosState extends State<VerProductos> {
   }
 
   Widget _form() {
-  return Container(
-    height: MediaQuery.of(context).size.height * 1,
-    padding: const EdgeInsets.all(5),
-    decoration: util.boxDecorationDiv(),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    eventsBloc.add(ChangeStateMenu(
-                        [true, true, false, false, false],
-                        {'route': Publicaciones()}));
-                  },
-                  icon: Icon(Icons.arrow_back),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        util.tituloBlack(
-                          'INFORMACIÓN DEL PRODUCTO',
-                          12.0,
-                          30,
-                          Colors.black,
-                          true,
+    return Container(
+      height: MediaQuery.of(context).size.height * 1,
+      padding: const EdgeInsets.all(5),
+      decoration: util.boxDecorationDiv(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      eventsBloc.add(ChangeStateMenu(
+                          [true, true, false, false, false],
+                          {'route': Publicaciones()}));
+                    },
+                    icon: Icon(Icons.arrow_back),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          util.tituloBlack(
+                            'INFORMACIÓN DEL PRODUCTO',
+                            12.0,
+                            30,
+                            Colors.black,
+                            true,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
                         ),
-                      ],
+                      ),
                     ),
-                  ],
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.grey,
-                        width: 1.0,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [],
                       ),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [],
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: productos.length,
-            itemBuilder: (context, index) {
-              ProductosModel discusion = productos[index];
-              return _contenedorParticipantes(discusion);
-            },
+          Expanded(
+            child: ListView.builder(
+              itemCount: productos.length,
+              itemBuilder: (context, index) {
+                ProductosModel discusion = productos[index];
+                return _contenedorParticipantes(discusion);
+              },
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 
   String removeHtmlTags(String htmlString) {
     RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
@@ -147,7 +146,6 @@ class _VerProductosState extends State<VerProductos> {
   }
 
   Widget _contenedorParticipantes(ProductosModel productos) {
-     print(productos); 
     return Container(
       margin: const EdgeInsets.all(10.0),
       padding: const EdgeInsets.all(20.0),
@@ -186,21 +184,44 @@ class _VerProductosState extends State<VerProductos> {
                 SizedBox(height: 10),
                 Text(
                   '${productos.nombre}',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                 ),
+                SizedBox(height: 20),
                 Text(
                   ' ${productos.descripcion}',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),
                 Text(
                   'Precio: ${productos.precio}',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 18),
                 ),
                 Text(
                   'Cantidad disponible: ${productos.cantidad}',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 18),
                 ),
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton( 
+                  onPressed: (){ },
+                  style: ElevatedButton.styleFrom(
+                    shadowColor: Colors.blue,
+                    primary: Colors.blue,
+                  ),
+                  child: Text('Contactar', style: TextStyle(color: Colors.white)),
+                ),
+                ElevatedButton( 
+                  onPressed: (){ },
+                  style: ElevatedButton.styleFrom(
+                    shadowColor: Colors.blue,
+                    primary: Colors.blue,
+                  ),
+                  child: Text('Comentar', style: TextStyle(color: Colors.white)),
+                )
+                  ],
+                )
               ],
             ),
           ),

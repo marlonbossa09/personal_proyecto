@@ -85,7 +85,7 @@ class _CrearProductoState extends State<CrearProducto> {
                                 Row(
                                   children: [
                                     util.tituloBlack(
-                                      '${widget.editar ? 'EDITAR' : 'CREAR'} EMPRESA',
+                                      '${widget.editar ? 'EDITAR' : 'CREAR'} PRODUCTO',
                                       15.0,
                                       20,
                                       const Color.fromARGB(255, 12, 60, 100),

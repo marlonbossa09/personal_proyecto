@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/models/EstudiantesModel.dart';
-import 'package:personal_proyecto/screens/page1.dart';
+import 'package:personal_proyecto/screens/inicio.dart';
 import 'package:personal_proyecto/util/utils.dart';
 
 class AgregarComentario extends StatefulWidget {
@@ -53,7 +53,7 @@ class _AgregarComentarioState extends State<AgregarComentario> {
                       onPressed: () {
                         eventsBloc.add(ChangeStateMenu(
                             [true, true, false, false, false],
-                            {'route': Page1()}));
+                            {'route': Inicio()}));
                       },
                       icon: Icon(Icons.arrow_back)),
                   Row(

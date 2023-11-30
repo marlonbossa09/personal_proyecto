@@ -9,6 +9,7 @@ import 'package:personal_proyecto/screens/busquedas.dart';
 import 'package:personal_proyecto/screens/comentarios.dart';
 import 'package:personal_proyecto/screens/crearProducto.dart';
 import 'package:personal_proyecto/screens/perfilUsuario.dart';
+import 'package:personal_proyecto/screens/productosGeneral.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
 import 'package:personal_proyecto/screens/usuarios.dart';
 
@@ -48,6 +49,13 @@ class _HomeState extends State<Home> {
       'titulo': 'Crear Producto',
       'icono': const Icon(Icons.notifications),
       'menu': {'route': Usuarios()},
+      'pos': 2,
+      'roles': 'A,V'
+    },
+    {
+      'titulo': 'ProductosGeneral',
+      'icono': const Icon(Icons.production_quantity_limits),
+      'menu': {'route': ProductosGeneral()},
       'pos': 2,
       'roles': 'A,V'
     },
