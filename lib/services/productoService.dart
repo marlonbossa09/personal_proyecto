@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:personal_proyecto/models/ProductosModel.dart';
+import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'dart:convert';
 
 import 'package:personal_proyecto/services/varGlobales.dart';
@@ -9,9 +9,10 @@ class ProductoService {
   final String _OBTENER_PRODUCTO = '/productos';
   final String _OBTENER_PRODUCTO_ID = '/productos/';
   final String _CREAR_PRODUCTO = '/productos/agregar';
-  final String _EDITAR_EMPRESA = '';
+  final String _EDITAR_PRODUCTO = '/update/';
+  final String _ELIMINAR_PRODUCTO = '/delete/';
 
- Future<List<ProductosModel>> verProductos(String token) async {
+ Future<List<ProductoConUsuarioModel>> verProductos(String token) async {
   final response = await http.get(
     Uri.parse('$URL$_OBTENER_PRODUCTO'),
     headers: {
@@ -26,7 +27,7 @@ class ProductoService {
       // Intentar decodificar el JSON
       try {
         List<dynamic> jsonList = jsonDecode(response.body);
-        List<ProductosModel> productos = jsonList.map((json) => ProductosModel.fromJson(json)).toList();
+        List<ProductoConUsuarioModel> productos = jsonList.map((json) => ProductoConUsuarioModel.fromJson(json)).toList();
         return productos;
       } catch (e) {
         print('Error de decodificación JSON: $e');
@@ -42,32 +43,95 @@ class ProductoService {
   }
 }
 
-Future<ProductosModel> verProductoId(int id, String token) async {
-  final response = await http.get(
-    Uri.parse('$URL$_OBTENER_PRODUCTO_ID$id'),
-    headers: {
-      'Authorization': 'Bearer $token',
-      "Access-Control-Allow-Origin": "*",
-      'Accept': '*/*',
-      'Content-Type': 'application/json; charset=UTF-8'
-    },
-  );
 
-  if (response.statusCode == 200) {
-    final dynamic responseBody = jsonDecode(response.body);
-    print(responseBody); // Imprime la respuesta para ver su estructura
+Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$URL$_OBTENER_PRODUCTO_ID$id'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        "Access-Control-Allow-Origin": "*",
+        'Accept': 'application/json',
+      },
+    );
 
-    if (responseBody != null) {
-      ProductosModel producto = ProductosModel.fromJson(responseBody);
-      return producto;
+    if (response.statusCode == 200) {
+      final dynamic responseBody = jsonDecode(response.body);
+      print(responseBody); 
+
+      if (responseBody != null) {
+        final creadorData = responseBody['creador'];
+
+        Estudiantes creador;
+        if (creadorData is String) {
+          creador = Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: creadorData, codigo: 0);
+        } else if (creadorData is Map<String, dynamic>) {
+          creador = Estudiantes.fromJson(creadorData);
+        } else {
+          creador = Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: '', codigo: 0);
+        }
+
+        ProductoConUsuarioModel producto = ProductoConUsuarioModel.fromJson(responseBody['producto']);
+
+        return ProductoConUsuarioModel(
+          id: producto.id,
+          nombre: producto.nombre,
+          descripcion: producto.descripcion,
+          cantidad: producto.cantidad,
+          precio: producto.precio,
+          creador: creador,
+        );
+      } else {
+        return ProductoConUsuarioModel(
+          id: id, // Puedes asignar el id como identificador si el objeto está vacío
+          nombre: '',
+          descripcion: '',
+          cantidad: '',
+          precio: '',
+          creador: Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: '', codigo: 0),
+        );
+      }
     } else {
-      return ProductosModel(id: 0, nombre: '', descripcion: '', cantidad: '', precio: ''); // O puedes devolver null o lanzar una excepción según tus necesidades
+      throw Exception('Ocurrió un error. Código de estado: ${response.statusCode}');
     }
-  } else {
-    throw Exception('Ocurrió un error. Código de estado: ${response.statusCode}');
+  } catch (e) {
+    print('Error: $e');
+    return ProductoConUsuarioModel(
+      id: id, // Puedes asignar el id como identificador si hay un error
+      nombre: '',
+      descripcion: '',
+      cantidad: '',
+      precio: '',
+      creador: Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: '', codigo: 0),
+    );
   }
 }
 
+  Future<Map> eliminarProducto(int id, String token) async {
+  try {
+    final response = await http.delete(
+      Uri.parse('$URL$_OBTENER_PRODUCTO$_ELIMINAR_PRODUCTO$id'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        "Access-Control-Allow-Origin": "*",
+        'Accept': '*/*',
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+    );
+
+    if (response.statusCode == 204) {
+      return {'success': true, 'data': null}; // No hay contenido para decodificar
+    } else {
+      throw Exception('Ocurrió un error');
+    }
+  } catch (e) {
+    print('Error: $e');
+    return {
+      'success': false,
+      'error': 'Se presentó un problema al eliminar el usuario.'
+    };
+  }
+}
 
   
 Future<Map<String, dynamic>> crearProducto(Map<String, dynamic> data, String token) async {
@@ -96,32 +160,29 @@ Future<Map<String, dynamic>> crearProducto(Map<String, dynamic> data, String tok
 }
 
 
-Future<Map<String, dynamic>> editarEmpresa(
+Future<Map<String, dynamic>> editarProducto(
     Map<String, dynamic> datos, String userid, String token) async {
   try {
     final response = await http.put(
-      Uri.parse('$URL$_EDITAR_EMPRESA$userid'),
-      headers: <String, String>{
-        'accept': 'application/json',
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json'
-      },
+      Uri.parse('$URL$_OBTENER_PRODUCTO$_EDITAR_PRODUCTO$userid'),
+      headers: {
+      'Authorization': 'Bearer $token',
+      "Access-Control-Allow-Origin": "*",
+      'Accept': '*/*', 
+      'Content-Type': 'application/json; charset=UTF-8'
+    },
       body: jsonEncode(datos),
     );
 
-    if (response.statusCode == 200 || response.statusCode == 400) {
-      final responseData = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        return {'detail': responseData['content']};
-      } else {
-        return {'detail': responseData['detail'][0]['msg']};
-      }
+    if (response.statusCode == 200) {
+      print('Error: ${response.body}');
+      return {'success': true, 'data': jsonDecode(response.body)};
     } else {
       throw Exception('Ocurrió un error');
     }
   } catch (e) {
-    return {'detail': 'Se presentó un problema al crear la empresa.'};
+    print('Error: $e');
+    return {'success': false, 'error': 'Se presentó un problema al crear la empresa.'};
   }
 }
 

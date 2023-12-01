@@ -1,27 +1,27 @@
 import 'dart:js_util';
 
-import 'package:personal_proyecto/blocs/usuarios/usuarios_bloc.dart';
-import 'package:personal_proyecto/screens/usuarios.dart';
-import 'package:personal_proyecto/services/usuariosService.dart';
+import 'package:personal_proyecto/blocs/productos/productos_bloc.dart';
+import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
+import 'package:personal_proyecto/screens/productosGeneral.dart';
+import 'package:personal_proyecto/services/productoService.dart';
 import 'package:personal_proyecto/util/utils.dart';
 import 'package:personal_proyecto/widgets/personalizados.dart';
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
 
-class EliminarUsuarios extends StatefulWidget {
+class EliminarProductos extends StatefulWidget {
   final eliminar;
-  final Estudiantes? userEdit;
-  const EliminarUsuarios({super.key, this.eliminar, this.userEdit});
+  final ProductoConUsuarioModel? userEdit;
+  const EliminarProductos({super.key, this.eliminar, this.userEdit});
 
   @override
-  State<EliminarUsuarios> createState() => _EliminarUsuariosState();
+  State<EliminarProductos> createState() => _EliminarProductosState();
 }
 
-class _EliminarUsuariosState extends State<EliminarUsuarios> {
+class _EliminarProductosState extends State<EliminarProductos> {
   Utils util = Utils();
 
   List<Map> roles = [
@@ -33,11 +33,10 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
 
   final _formKey = GlobalKey<FormState>();
   final nombreController = TextEditingController();
-  final passwordController = TextEditingController();
-  final repeatPasswordController = TextEditingController();
-  final rolController = TextEditingController();
-  final emailController = TextEditingController();
-  final apellidoController = TextEditingController();
+  final mensajeController = TextEditingController();
+  final cantidadController = TextEditingController();
+  final precioController = TextEditingController();
+  final descripcionController = TextEditingController();
 
   final ValueNotifier<bool> _changePassword = ValueNotifier<bool>(false);
   TextStyle textStyle = const TextStyle(
@@ -47,7 +46,7 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
   @override
   void dispose() {
     super.dispose();
-    usuariosBloc.add(InitialStateEvent());
+    usuariosBloc.add(InitialProductossEvent());
   }
 
   @override
@@ -62,7 +61,7 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
   @override
   Widget build(BuildContext context) {
     eventsBloc = BlocProvider.of<EventsBloc>(context);
-    usuariosBloc = BlocProvider.of<UsuariosBloc>(context);
+    usuariosBloc = BlocProvider.of<ProductosBloc>(context);
 
     return Expanded(
       flex: 8,
@@ -116,7 +115,7 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              _botonNuevo({'route': Usuarios()}),
+                              _botonNuevo({'route': ProductosGeneral()}),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: BlocBuilder<UserBloc, UserState>(
@@ -125,18 +124,17 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
                                       child: ElevatedButton(
                                         onPressed: () async {
                                           if (widget.eliminar) {
-                                            Map data = await UsuariosService()
-                                                .eliminarUsuario(
-                                              widget.userEdit!.codigo,
+                                            Map data = await ProductoService().eliminarProducto
+                                                (
+                                              widget.userEdit!.id,
                                               state.user!.token,
                                             );
 
                                             if (data['success']) {
                                               nombreController.clear();
-                                              passwordController.clear();
-                                              rolController.clear();
-                                              emailController.clear();
-                                              apellidoController.clear();
+                                              descripcionController.clear();
+                                            cantidadController.clear();
+                                            precioController.clear();
                                               util.message(
                                                   context,
                                                   'Se eliminó correctamente',
@@ -149,7 +147,7 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
                                                 false,
                                                 false,
                                               ], {
-                                                'route': Usuarios()
+                                                'route': ProductosGeneral()
                                               }));
                                             } else {
                                               print(data[
@@ -182,12 +180,11 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
     );
   }
 
-  _cargarDatos(Estudiantes user) async {
-    nombreController.text = user.nombre;
-    apellidoController.text = user.apellido;
-    rolController.text = user.rol;
-    emailController.text = user.email;
-    passwordController.text = '';
+  _cargarDatos(ProductoConUsuarioModel producto) async {
+    nombreController.text = producto.nombre;
+    descripcionController.text = producto.descripcion;
+    cantidadController.text = producto.cantidad.toString();
+    precioController.text = producto.precio.toString();
   }
 
   Widget _listTitle(Widget titulo, Widget description, Widget? icono) {
@@ -215,7 +212,7 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
     );
   }
 
-  Widget _form(bool eliminar) {
+  Widget _form(bool editar) {
     return Form(
       key: _formKey,
       child: GridView(
@@ -223,24 +220,48 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
             crossAxisCount: 3, childAspectRatio: 3.5),
         children: [
           ListTilePersonalizado(
-            etitle: 'Nombre username: ',
-            esubtitle: crearTextFormField('username', 'Ingrese su username.',
-                nombreController, false, false),
-          ),
-          ListTilePersonalizado(
-            etitle: 'idRolController: ',
-            esubtitle: crearTextFormField('idRolController',
-                'Ingrese el nombre', rolController, false, false),
-          ),
-          ListTilePersonalizado(
-            etitle: 'idEmpresaController',
+            etitle: 'Nombre del producto: ',
             esubtitle: crearTextFormField(
-                'Apellido', 'Apellido', emailController, false, false),
+                'producto', 'Ingrese producto', nombreController, false, false),
           ),
           ListTilePersonalizado(
-            etitle: 'idSedeController: ',
+            etitle: 'Cantidad: ',
+            esubtitle: crearTextFormField('Cantidad', 'Ingrese la cantidad',
+                cantidadController, false, false),
+          ),
+          ListTilePersonalizado(
+            etitle: 'Precio: ',
             esubtitle: crearTextFormField(
-                'Email', 'Ingrese un email.', apellidoController, false, false),
+                'Precio', 'Ingrese el Precio', precioController, false, false),
+          ),
+          const Text(
+            'Agregue una descripción',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          crearTextFormDescripcion(),
+        ],
+      ),
+    );
+  }
+  Widget crearTextFormDescripcion() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          util.tituloBlack('Escribe aquí:', 10.0, 15, Colors.black, true),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: TextFormField(
+              maxLines: 5,
+              controller: descripcionController,
+              decoration: util.inputDecoration('', false),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'subTitle';
+                }
+                return null;
+              },
+            ),
           ),
         ],
       ),

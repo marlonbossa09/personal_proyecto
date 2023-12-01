@@ -7,7 +7,7 @@ class InitialProductossEvent extends ProductossEvent {}
 
 
 class ChangeDataProductosEvent extends ProductossEvent{
-  final List<ProductosModel> productos;
+  final List<ProductoConUsuarioModel> productos;
   final bool chargin;
   ChangeDataProductosEvent(this.productos,this.chargin);
 }

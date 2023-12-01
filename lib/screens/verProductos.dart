@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
-import 'package:personal_proyecto/models/ProductosModel.dart';
 import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
 import 'package:personal_proyecto/services/productoService.dart';
 import 'package:personal_proyecto/util/utils.dart';
 
 class VerProductos extends StatefulWidget {
-  int id;
-  VerProductos({super.key, required this.id});
+  ProductoConUsuarioModel productos;
+  VerProductos({super.key, required this.productos});
   @override
   State<VerProductos> createState() => _VerProductosState();
 }
@@ -25,7 +24,7 @@ class _VerProductosState extends State<VerProductos> {
   var usuariosBloc;
   var user_sesionBloc;
   List<Estudiantes> users = [];
-  List<ProductosModel> productos = [];
+  List<ProductoConUsuarioModel> productos = [];
 
   late Estudiantes hola;
 
@@ -40,8 +39,8 @@ class _VerProductosState extends State<VerProductos> {
       user_sesionBloc = BlocProvider.of<UserBloc>(context);
       final state = user_sesionBloc.state;
 
-      final ProductosModel producto =
-          await ProductoService().verProductoId(widget.id, state.user!.token);
+      final ProductoConUsuarioModel producto =
+          await ProductoService().verProductoId(widget.productos.id, state.user!.token);
 
       setState(() {
         productos = [
@@ -130,7 +129,7 @@ class _VerProductosState extends State<VerProductos> {
             child: ListView.builder(
               itemCount: productos.length,
               itemBuilder: (context, index) {
-                ProductosModel discusion = productos[index];
+                ProductoConUsuarioModel discusion = productos[index];
                 return _contenedorParticipantes(discusion);
               },
             ),
@@ -145,7 +144,7 @@ class _VerProductosState extends State<VerProductos> {
     return htmlString.replaceAll(exp, '');
   }
 
-  Widget _contenedorParticipantes(ProductosModel productos) {
+  Widget _contenedorParticipantes(ProductoConUsuarioModel productos) {
     return Container(
       margin: const EdgeInsets.all(10.0),
       padding: const EdgeInsets.all(20.0),
@@ -174,11 +173,10 @@ class _VerProductosState extends State<VerProductos> {
                       child:
                           Image.asset('assets/falcao.jpg', fit: BoxFit.cover),
                     ),
-                    const Text(
-                      'Radamel Falcao',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
+                  Text(
+                        '${productos.creador.nombre} ${productos.creador.apellido}',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
                   ],
                 ),
                 SizedBox(height: 10),

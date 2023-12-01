@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/productos/productos_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
+import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/models/ProductosModel.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
 import 'package:personal_proyecto/screens/verProductos.dart';
@@ -13,7 +14,7 @@ import 'package:personal_proyecto/widgets/personalizados.dart';
 
 class CrearProducto extends StatefulWidget {
   final editar;
-  final ProductosModel? userEdit;
+  final ProductoConUsuarioModel? userEdit;
  CrearProducto({super.key, this.editar, this.userEdit});
 
   @override
@@ -45,7 +46,7 @@ class _CrearProductoState extends State<CrearProducto> {
   @override
   void dispose() {
     super.dispose();
-    productosBloc.add(InitialUserEvent());
+    productosBloc.add(InitialProductossEvent());
   }
 
   @override
@@ -136,7 +137,7 @@ class _CrearProductoState extends State<CrearProducto> {
                                           final Map<String, dynamic> data =
                                               widget.editar
                                                   ? await ProductoService()
-                                                      .editarEmpresa(
+                                                      .editarProducto(
                                                           datosUser,
                                                           widget.userEdit!.id
                                                               .toString(),
@@ -200,7 +201,7 @@ class _CrearProductoState extends State<CrearProducto> {
     );
   }
 
-  _cargarDatos(ProductosModel producto) async {
+  _cargarDatos(ProductoConUsuarioModel producto) async {
     nombreController.text = producto.nombre;
     descripcionController.text = producto.descripcion;
     cantidadController.text = producto.cantidad.toString();

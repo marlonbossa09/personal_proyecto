@@ -1,8 +1,8 @@
 import 'package:personal_proyecto/blocs/productos/productos_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
-import 'package:personal_proyecto/models/ProductosModel.dart';
+import 'package:personal_proyecto/models/EstudiantesModel.dart';
 import 'package:personal_proyecto/screens/crearProducto.dart';
-import 'package:personal_proyecto/screens/eliminarUsuarios.dart';
+import 'package:personal_proyecto/screens/eliminarProductos.dart';
 import 'package:personal_proyecto/services/productoService.dart';
 import 'package:personal_proyecto/util/utils.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +117,7 @@ class _ProductosGeneralState extends State<ProductosGeneral> {
                                               Text('Precio', style: textStyle)),
                                       DataColumn(
                                           label:
-                                              Text('Estado', style: textStyle)),
+                                              Text('Creador', style: textStyle)),
                                       DataColumn(
                                           label: Text('', style: textStyle)),
                                       DataColumn(
@@ -197,7 +197,7 @@ class _ProductosGeneralState extends State<ProductosGeneral> {
                                     {_valueFiltro.value: _tbxController.text});
                               }
 
-                              List<ProductosModel> data = await ProductoService()
+                              List<ProductoConUsuarioModel> data = await ProductoService()
                                   .verProductos(state.user!.token);
 
                               if (data.isNotEmpty) {
@@ -362,7 +362,7 @@ class _DataSource extends DataTableSource {
       return null;
     }
 
-    ProductosModel dato = _data[index];
+    ProductoConUsuarioModel dato = _data[index];
     return DataRow.byIndex(
       index: index,
       color: MaterialStateColor.resolveWith((states) {
@@ -376,7 +376,7 @@ class _DataSource extends DataTableSource {
         DataCell(Text(dato.descripcion)),
         DataCell(Text(dato.cantidad)),
         DataCell(Text(dato.precio)),
-        DataCell(Text('')),
+        DataCell(Text(dato.creador.nombre+' '+dato.creador.apellido)),
         DataCell(
           ElevatedButton(
             onPressed: () {
@@ -405,8 +405,9 @@ class _DataSource extends DataTableSource {
               false,
               false,
             ], {
-              'route': EliminarUsuarios(
+              'route': EliminarProductos(
                 eliminar: true,
+                userEdit: dato,
               )
             }));
           },

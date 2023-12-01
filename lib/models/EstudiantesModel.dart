@@ -29,3 +29,32 @@ class Estudiantes {
     );
   }
 }
+
+class ProductoConUsuarioModel {
+  final int id;
+  final String nombre;
+  final String descripcion;
+  final String cantidad;
+  final String precio;
+  final Estudiantes creador;
+
+  const ProductoConUsuarioModel({
+    required this.id,
+    required this.nombre,
+    required this.descripcion,
+    required this.cantidad,
+    required this.precio,
+    required this.creador,
+  });
+
+  factory ProductoConUsuarioModel.fromJson(Map<String, dynamic> json) {
+    return ProductoConUsuarioModel(
+      id: json['id'] ?? 0,
+      nombre: json['nombre'] ?? "",
+      descripcion: json['descripcion'] ?? "",
+      cantidad: json['cantidad'] ?? "",
+      precio: json['precio'] ?? "",
+      creador: Estudiantes.fromJson(json['creador'] ?? {}),
+    );
+  }
+}

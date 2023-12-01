@@ -25,7 +25,7 @@ class _PublicacionesState extends State<Publicaciones> {
   var usuariosBloc;
   var user_sesionBloc;
   List<Estudiantes> users = [];
-  List<ProductosModel> productos = [];
+  List<ProductoConUsuarioModel> productos = [];
 
   late Estudiantes hola;
 
@@ -39,7 +39,7 @@ class _PublicacionesState extends State<Publicaciones> {
     try {
       user_sesionBloc = BlocProvider.of<UserBloc>(context);
       final state = user_sesionBloc.state;
-      final List<ProductosModel> producto =
+      final List<ProductoConUsuarioModel> producto =
           await ProductoService().verProductos(state.user!.token);
 
       setState(() {
@@ -127,7 +127,7 @@ class _PublicacionesState extends State<Publicaciones> {
           child: ListView.builder(
             itemCount: productos.length,
             itemBuilder: (context, index) {
-              ProductosModel discusion = productos[index];
+              ProductoConUsuarioModel discusion = productos[index];
               return _contenedorParticipantes(discusion);
             },
           ),
@@ -143,80 +143,94 @@ class _PublicacionesState extends State<Publicaciones> {
     return htmlString.replaceAll(exp, '');
   }
 
-  Widget _contenedorParticipantes(ProductosModel productos) {
-    return Container(
-      margin: const EdgeInsets.all(10.0),
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(38, 63, 81, 181),
-        border: Border.all(
-          color: Color.fromARGB(221, 158, 158, 158),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(10.0),
+  Widget _contenedorParticipantes(ProductoConUsuarioModel productos) {
+  return Container(
+    margin: const EdgeInsets.all(10.0),
+    padding: const EdgeInsets.all(20.0),
+    decoration: BoxDecoration(
+      color: Color.fromARGB(38, 63, 81, 181),
+      border: Border.all(
+        color: Color.fromARGB(221, 158, 158, 158),
+        width: 1.0,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.only(right: 10),
-                      child:
-                          Image.asset('assets/falcao.jpg', fit: BoxFit.cover),
-                    ),
-                    const Text(
-                      'Radamel Falcao',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '${productos.nombre}',
-                  style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Precio: ${productos.precio}',
-                  style: TextStyle(fontSize: 15),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton( 
-                  onPressed: (){
-              eventsBloc.add(ChangeStateMenu([
-                true,
-                false,
-                false,
-                false,
-                false,
-                false,
-              ], {
-                'route':
-                    VerProductos(id: productos.id,)
-              }));
-            },
-                  style: ElevatedButton.styleFrom(
-                    shadowColor: Colors.blue,
-                    primary: Colors.blue,
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 10),
+                    child: Image.asset('assets/falcao.jpg', fit: BoxFit.cover),
                   ),
-                  child: Text('Ver', style: TextStyle(color: Colors.white)),
-                )
-              ],
-            ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Publicado por:',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '${productos.creador.nombre} ${productos.creador.apellido}',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Text(
+                '${productos.nombre}',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Precio: ${productos.precio}',
+                style: TextStyle(fontSize: 15),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  eventsBloc.add(
+                    ChangeStateMenu(
+                      [
+                        true,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                      ],
+                      {
+                        'route': VerProductos(
+                          productos: productos,
+                        )
+                      },
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  shadowColor: Colors.blue,
+                  primary: Colors.blue,
+                ),
+                child: Text('Ver', style: TextStyle(color: Colors.white)),
+              )
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget formNoData() {
     return Container(
