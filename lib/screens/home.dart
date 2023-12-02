@@ -4,10 +4,7 @@ import 'dart:math' as math;
 
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
-import 'package:personal_proyecto/screens/Notificaciones.dart';
-import 'package:personal_proyecto/screens/agregarProducto.dart';
 import 'package:personal_proyecto/screens/busquedas.dart';
-import 'package:personal_proyecto/screens/comentarios.dart';
 import 'package:personal_proyecto/screens/crearProducto.dart';
 import 'package:personal_proyecto/screens/perfilUsuario.dart';
 import 'package:personal_proyecto/screens/productosGeneral.dart';
@@ -37,19 +34,19 @@ class _HomeState extends State<Home> {
       'icono': const Icon(Icons.home),
       'menu': {'route': Publicaciones()},
       'pos': 0,
-      'roles': 'A,V,L'
+      'roles': 'A,V,C'
     },
     {
       'titulo': 'Productos',
       'icono': const Icon(Icons.search),
       'menu': {'route': Busquedas()},
       'pos': 1,
-      'roles': 'G,A,V,L'
+      'roles': 'A,V,L'
     },
     {
       'titulo': 'Crear Producto',
       'icono': const Icon(Icons.notifications),
-      'menu': {'route': Notificaciones()},
+      'menu': {'route': Usuarios()},
       'pos': 2,
       'roles': 'A,V'
     },
@@ -69,7 +66,7 @@ class _HomeState extends State<Home> {
         )
       },
       'pos': 2,
-      'roles': 'A,V,L'
+      'roles': 'A,V,C'
     }
   ];
 
@@ -192,66 +189,75 @@ class _HomeState extends State<Home> {
   }
 
   Widget _barraMenu(BuildContext context) {
-    List<bool> states = List.filled(menus.length, false);
-    return Container(
-      color: Colors.blueAccent,
-      height: 50,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(menus.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: InkWell(
-                onTap: () {
-                  _onMenuTapped(menus[index]['menu']);
-                },
-                child: Icon(
-                  menus[index]['icono'].icon,
-                  size: 35,
-                  color: states[index]
-                      ? const Color.fromRGBO(4, 142, 255, 1)
-                      : const Color.fromARGB(255, 5, 51, 88),
-                ),
+  return BlocBuilder<EventsBloc, EventsState>(
+    builder: (context, state) {
+      return BlocBuilder<UserBloc, UserState>(
+        builder: (context, user) {
+          states = state.state;
+          String rol = user.user!.rol;
+          List<Map<String, dynamic>> menusVal = [];
+          for (Map<String, dynamic> menu in menus) {
+            if (menu['roles'].toString().contains(rol)) {
+              menusVal.add(menu);
+            }
+          }
+          return Container(
+            color: Colors.blueAccent,
+            height: 50,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(menusVal.length, (i) {
+                  if (menusVal[i]['roles'].contains(user.user!.rol)) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                      child: _crearListitles(
+                        menusVal[i]['titulo'],
+                        menusVal[i]['icono'].icon, 
+                        menusVal[i]['menu'],
+                        menusVal[i]['pos'],
+                        true,
+                        40.0,
+                        const Color.fromARGB(255, 5, 51, 88), 
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }),
               ),
-            );
-          }),
-        ),
-      ),
-    );
-  }
+            ),
+          );
+        },
+      );
+    },
+  );
+}
 
-  void _onMenuTapped(Map menu) {
-    for (int i = 0; i < states.length; i++) {
-      states[i] = false;
-    }
 
-    eventsBloc.add(ChangeStateMenu(states, menu));
-  }
 
   Widget _crearListitles(
-      String titulo, Icon icono, Map menu, int j, bool bloc) {
-    return ListTile(
-      leading: icono,
-      selected: bloc ? states[j] : bloc,
-      selectedColor: const Color.fromRGBO(4, 142, 255, 1),
-      trailing: const Icon(
-        Icons.arrow_right,
+    String titulo,
+    IconData iconData,
+    Map menu,
+    int j,
+    bool bloc,
+    double iconSize, 
+    Color iconColor, 
+  ) {
+    return IconButton(
+      icon: Icon(
+        iconData,
+        size: iconSize,
+        color: iconColor,
       ),
-      iconColor: Color.fromARGB(255, 5, 51, 88),
-      hoverColor: Color.fromARGB(255, 236, 236, 236),
-      focusColor: Color.fromARGB(255, 236, 236, 236),
-      title: Text(titulo, style: TextStyle(fontSize: 15)),
-      onTap: () {
+      onPressed: () {
         if (bloc) {
           for (int i = 0; i < states.length; i++) {
             states[i] = false;
           }
-
           select[0] = false;
           select[1] = false;
-
           states[j] = true;
         }
         eventsBloc.add(ChangeStateMenu(states, menu));

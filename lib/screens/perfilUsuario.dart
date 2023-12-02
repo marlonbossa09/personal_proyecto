@@ -43,7 +43,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
 
   final ValueNotifier<bool> _valueChkActualizar = ValueNotifier<bool>(false);
 
-  List<Estudiantes> categorias = [];
+  List<Usuarios> categorias = [];
 
   @override
   Widget build(BuildContext context) {

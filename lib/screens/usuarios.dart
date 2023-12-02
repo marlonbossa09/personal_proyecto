@@ -117,7 +117,7 @@ class _UsuariosState extends State<Usuarios> {
                                               Text('Sede', style: textStyle)),
                                       DataColumn(
                                           label:
-                                              Text('Estado', style: textStyle)),
+                                              Text('Celular', style: textStyle)),
                                       DataColumn(
                                           label: Text('', style: textStyle)),
                                       DataColumn(
@@ -376,7 +376,7 @@ class _DataSource extends DataTableSource {
         DataCell(Text(dato.rol)),
         DataCell(Text(dato.apellido)),
         DataCell(Text(dato.email)),
-        DataCell(Text('')),
+        DataCell(Text(dato.celular)),
         DataCell(
           ElevatedButton(
             onPressed: () {

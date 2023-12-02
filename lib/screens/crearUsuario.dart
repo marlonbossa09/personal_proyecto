@@ -33,6 +33,7 @@ class _CrearUsuarioState extends State<CrearUsuario> {
   final repeatPasswordController = TextEditingController();
   final rolController = TextEditingController();
   final emailController = TextEditingController();
+  final celularController = TextEditingController();
   final apellidoController = TextEditingController();
 Map<String, dynamic> datos = {};
 
@@ -139,6 +140,7 @@ Map<String, dynamic> datos = {};
                                                     apellidoController.text,
                                                 "rol": rolController.text,
                                                 "email": emailController.text,
+                                                "celular": celularController.text,
                                                 "clave": passwordController.text
                                               };
                                               Map<String, dynamic> datosUser2 = {
@@ -148,6 +150,7 @@ Map<String, dynamic> datos = {};
                                                     apellidoController.text,
                                                 "rol": rolController.text,
                                                 "email": emailController.text,
+                                                "celular": celularController.text,
                                               };
 
                                               if (widget.editar) {
@@ -163,6 +166,7 @@ Map<String, dynamic> datos = {};
                                                   passwordController.clear();
                                                   apellidoController.clear();
                                                   emailController.clear();
+                                                  celularController.clear();
                                                   util.message(
                                                       context,
                                                       'Se editó correctamente',
@@ -194,6 +198,7 @@ Map<String, dynamic> datos = {};
                                                   passwordController.clear();
                                                   apellidoController.clear();
                                                   emailController.clear();
+                                                  celularController.clear();
                                                   util.message(
                                                       context,
                                                       'Se creó correctamente',
@@ -286,6 +291,11 @@ Map<String, dynamic> datos = {};
             ListTilePersonalizado(
               etitle: 'Email',
               esubtitle: crearTextFormField('Email', 'Ingrese su Email.',  emailController, false, false),
+            //  esubtitle: _filters2(context, _selectedItemFilter),
+            ),
+            ListTilePersonalizado(
+              etitle: 'Celular',
+              esubtitle: crearTextFormField('Username', 'Ingrese su celular.',  celularController, false, false),
             //  esubtitle: _filters2(context, _selectedItemFilter),
             ),
           if(!editar)

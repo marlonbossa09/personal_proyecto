@@ -2,8 +2,9 @@ class Estudiantes {
   final int codigo;
   final String nombre;
   final String apellido;
-  final String rol; // Asegúrate de tener este campo si está en tus datos de usuario
+  final String rol; 
   final String email;
+  final String celular;
   final String clave;
   final String token;
 
@@ -11,8 +12,9 @@ class Estudiantes {
     required this.codigo,
     required this.nombre,
     required this.apellido,
-    required this.rol, // Asegúrate de tener este campo si está en tus datos de usuario
+    required this.rol, 
     required this.email,
+    required this.celular,
     required this.clave,
     required this.token,
   });
@@ -24,6 +26,7 @@ class Estudiantes {
     apellido: json['apellido'] ?? "",
     rol: json['rol'] ?? "",
     email: json['email'] ?? "",
+    celular: json['celular'] ?? "",
     clave: json['clave'] ?? "",
       token: json['token'] ?? "",
     );
@@ -37,7 +40,7 @@ class ProductoConUsuarioModel {
   final String cantidad;
   final String precio;
   final Estudiantes creador;
-  final List<Comentario> comentarios; // Nueva propiedad para almacenar comentarios
+  final List<Comentario> comentarios;
 
   const ProductoConUsuarioModel({
     required this.id,

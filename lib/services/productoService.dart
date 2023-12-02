@@ -79,7 +79,7 @@ Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
           descripcion: '',
           cantidad: '',
           precio: '',
-          creador: Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: '', codigo: 0),
+          creador: Estudiantes(token: '', clave: '', email: '', celular: '', rol: '', apellido: '', nombre: '', codigo: 0),
           comentarios: [],
         );
       }
@@ -94,7 +94,7 @@ Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
       descripcion: '',
       cantidad: '',
       precio: '',
-      creador: Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: '', codigo: 0),
+      creador: Estudiantes(token: '', clave: '', email: '', celular: '', rol: '', apellido: '', nombre: '', codigo: 0),
       comentarios: [],
     );
   }

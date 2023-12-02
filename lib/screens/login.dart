@@ -132,6 +132,7 @@ class Login extends StatelessWidget {
                               apellido: user.apellido,
                               rol: user.rol,
                               email: user.email,
+                              celular: user.celular,
                               clave: user.clave,
                               token: user.token,
                             );
