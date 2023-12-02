@@ -37,6 +37,7 @@ class ProductoConUsuarioModel {
   final String cantidad;
   final String precio;
   final Estudiantes creador;
+  final List<Comentario> comentarios; // Nueva propiedad para almacenar comentarios
 
   const ProductoConUsuarioModel({
     required this.id,
@@ -45,9 +46,10 @@ class ProductoConUsuarioModel {
     required this.cantidad,
     required this.precio,
     required this.creador,
+    required this.comentarios,
   });
 
-  factory ProductoConUsuarioModel.fromJson(Map<String, dynamic> json) {
+  factory ProductoConUsuarioModel.fromJson(Map<String, dynamic> json, List<Comentario> comentarios) {
     return ProductoConUsuarioModel(
       id: json['id'] ?? 0,
       nombre: json['nombre'] ?? "",
@@ -55,6 +57,30 @@ class ProductoConUsuarioModel {
       cantidad: json['cantidad'] ?? "",
       precio: json['precio'] ?? "",
       creador: Estudiantes.fromJson(json['creador'] ?? {}),
+      comentarios: comentarios,
+    );
+  }
+}
+
+
+
+
+class Comentario {
+  final int id;
+  final String contenido;
+  final Estudiantes autor;
+
+  const Comentario({
+    required this.id,
+    required this.contenido,
+    required this.autor,
+  });
+
+  factory Comentario.fromJson(Map<String, dynamic> json) {
+    return Comentario(
+      id: json['id'] ?? 0,
+      contenido: json['contenido'] ?? "",
+      autor: Estudiantes.fromJson(json['autor'] ?? {}),
     );
   }
 }

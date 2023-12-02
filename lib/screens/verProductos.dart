@@ -117,7 +117,8 @@ class _VerProductosState extends State<VerProductos> {
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [],
+                        children: [
+                        ],
                       ),
                     ),
                   ),
@@ -145,88 +146,144 @@ class _VerProductosState extends State<VerProductos> {
   }
 
   Widget _contenedorParticipantes(ProductoConUsuarioModel productos) {
-    return Container(
-      margin: const EdgeInsets.all(10.0),
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(38, 63, 81, 181),
-        border: Border.all(
-          color: Color.fromARGB(221, 158, 158, 158),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(10.0),
+  return Container(
+    margin: const EdgeInsets.all(10.0),
+    padding: const EdgeInsets.all(20.0),
+    decoration: BoxDecoration(
+      color: Color.fromARGB(38, 63, 81, 181),
+      border: Border.all(
+        color: Color.fromARGB(221, 158, 158, 158),
+        width: 1.0,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.only(right: 10),
-                      child:
-                          Image.asset('assets/falcao.jpg', fit: BoxFit.cover),
-                    ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 10),
+                    child: Image.asset('assets/falcao.jpg', fit: BoxFit.cover),
+                  ),
                   Text(
-                        '${productos.creador.nombre} ${productos.creador.apellido}',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '${productos.nombre}',
-                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  ' ${productos.descripcion}',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Precio: ${productos.precio}',
-                  style: TextStyle(fontSize: 18),
-                ),
-                Text(
-                  'Cantidad disponible: ${productos.cantidad}',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton( 
-                  onPressed: (){ },
-                  style: ElevatedButton.styleFrom(
-                    shadowColor: Colors.blue,
-                    primary: Colors.blue,
+                    '${productos.creador.nombre} ${productos.creador.apellido}',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                  child: Text('Contactar', style: TextStyle(color: Colors.white)),
-                ),
-                ElevatedButton( 
-                  onPressed: (){ },
-                  style: ElevatedButton.styleFrom(
-                    shadowColor: Colors.blue,
-                    primary: Colors.blue,
+                ],
+              ),
+              SizedBox(height: 10),
+              Text(
+                '${productos.nombre}',
+                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              Text(
+                ' ${productos.descripcion}',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Precio: ${productos.precio}',
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                'Cantidad disponible: ${productos.cantidad}',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.blue,
+                      primary: Colors.blue,
+                    ),
+                    child: Text('Contactar', style: TextStyle(color: Colors.white)),
                   ),
-                  child: Text('Comentar', style: TextStyle(color: Colors.white)),
-                )
-                  ],
-                )
-              ],
-            ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.blue,
+                      primary: Colors.blue,
+                    ),
+                    child: Text('Comentar', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20), 
+              _contenedorComentarios(productos.comentarios),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+ Widget _contenedorComentarios(List<Comentario> comentarios) {
+  if (comentarios.isEmpty) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Text('No hay comentarios', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
     );
   }
+
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Comentarios', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: comentarios.map((comentario) {
+            return _contenedorComentario(comentario);
+          }).toList(),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _contenedorComentario(Comentario comentario) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 10),
+    padding: EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${comentario.autor.nombre}', // Asegúrate de tener la propiedad autor en tu modelo Comentario
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 5),
+        Text(
+          '${comentario.contenido}',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    ),
+  );
+}
+
+
+
 
   Widget formNoData() {
     return Container(

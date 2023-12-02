@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
+import 'package:personal_proyecto/screens/Notificaciones.dart';
 import 'package:personal_proyecto/screens/agregarProducto.dart';
 import 'package:personal_proyecto/screens/busquedas.dart';
 import 'package:personal_proyecto/screens/comentarios.dart';
@@ -48,7 +49,7 @@ class _HomeState extends State<Home> {
     {
       'titulo': 'Crear Producto',
       'icono': const Icon(Icons.notifications),
-      'menu': {'route': Usuarios()},
+      'menu': {'route': Notificaciones()},
       'pos': 2,
       'roles': 'A,V'
     },

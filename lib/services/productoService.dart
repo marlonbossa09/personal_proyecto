@@ -27,7 +27,7 @@ class ProductoService {
       // Intentar decodificar el JSON
       try {
         List<dynamic> jsonList = jsonDecode(response.body);
-        List<ProductoConUsuarioModel> productos = jsonList.map((json) => ProductoConUsuarioModel.fromJson(json)).toList();
+        List<ProductoConUsuarioModel> productos = jsonList.map((json) => ProductoConUsuarioModel.fromJson(json, [])).toList();
         return productos;
       } catch (e) {
         print('Error de decodificación JSON: $e');
@@ -44,6 +44,7 @@ class ProductoService {
 }
 
 
+
 Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
   try {
     final response = await http.get(
@@ -57,38 +58,29 @@ Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
 
     if (response.statusCode == 200) {
       final dynamic responseBody = jsonDecode(response.body);
-      print(responseBody); 
+      print(responseBody);
 
       if (responseBody != null) {
-        final creadorData = responseBody['creador'];
+        final productoJson = responseBody['producto'];
+        
+        final creadorData = productoJson['creador'];
+        Estudiantes creador = Estudiantes.fromJson(creadorData);
 
-        Estudiantes creador;
-        if (creadorData is String) {
-          creador = Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: creadorData, codigo: 0);
-        } else if (creadorData is Map<String, dynamic>) {
-          creador = Estudiantes.fromJson(creadorData);
-        } else {
-          creador = Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: '', codigo: 0);
-        }
+        List<dynamic> comentariosJson = productoJson['comentarios'] ?? [];
+        List<Comentario> comentarios = comentariosJson.map((comment) => Comentario.fromJson(comment)).toList();
 
-        ProductoConUsuarioModel producto = ProductoConUsuarioModel.fromJson(responseBody['producto']);
+        ProductoConUsuarioModel producto = ProductoConUsuarioModel.fromJson(productoJson, comentarios);
 
-        return ProductoConUsuarioModel(
-          id: producto.id,
-          nombre: producto.nombre,
-          descripcion: producto.descripcion,
-          cantidad: producto.cantidad,
-          precio: producto.precio,
-          creador: creador,
-        );
+        return producto;
       } else {
         return ProductoConUsuarioModel(
-          id: id, // Puedes asignar el id como identificador si el objeto está vacío
+          id: id,
           nombre: '',
           descripcion: '',
           cantidad: '',
           precio: '',
           creador: Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: '', codigo: 0),
+          comentarios: [],
         );
       }
     } else {
@@ -97,15 +89,18 @@ Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
   } catch (e) {
     print('Error: $e');
     return ProductoConUsuarioModel(
-      id: id, // Puedes asignar el id como identificador si hay un error
+      id: id,
       nombre: '',
       descripcion: '',
       cantidad: '',
       precio: '',
       creador: Estudiantes(token: '', clave: '', email: '', rol: '', apellido: '', nombre: '', codigo: 0),
+      comentarios: [],
     );
   }
 }
+
+
 
   Future<Map> eliminarProducto(int id, String token) async {
   try {
