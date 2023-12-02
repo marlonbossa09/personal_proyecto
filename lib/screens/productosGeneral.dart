@@ -64,8 +64,8 @@ class _ProductosGeneralState extends State<ProductosGeneral> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                util.tituloBlack('PRODUCTOS', 15.0, 20,
-                                    Colors.blue, true),
+                                util.tituloBlack(
+                                    'PRODUCTOS', 15.0, 20, Colors.blue, true),
                                 _form(context)
                               ],
                             )
@@ -99,16 +99,16 @@ class _ProductosGeneralState extends State<ProductosGeneral> {
                                             19,
                                             const Color.fromARGB(
                                                 255, 12, 60, 100),
-                                            true
-                                            )
+                                            true)
                                       ],
                                     ),
                                     columns: [
                                       DataColumn(
-                                          label: Text('Nombre',
-                                              style: textStyle)),
+                                          label:
+                                              Text('Nombre', style: textStyle)),
                                       DataColumn(
-                                          label: Text('Descripcion', style: textStyle)),
+                                          label: Text('Descripcion',
+                                              style: textStyle)),
                                       DataColumn(
                                           label: Text('Cantidad',
                                               style: textStyle)),
@@ -116,16 +116,16 @@ class _ProductosGeneralState extends State<ProductosGeneral> {
                                           label:
                                               Text('Precio', style: textStyle)),
                                       DataColumn(
-                                          label:
-                                              Text('Creador', style: textStyle)),
+                                          label: Text('Creador',
+                                              style: textStyle)),
                                       DataColumn(
                                           label: Text('', style: textStyle)),
                                       DataColumn(
                                           label: Text('Acciones',
                                               style: textStyle)),
                                     ],
-                                    source: _DataSource(usuariosState.productos!,
-                                        context),
+                                    source: _DataSource(
+                                        usuariosState.productos!, context),
                                     rowsPerPage: 5,
                                     arrowHeadColor:
                                         const Color.fromARGB(255, 12, 60, 100));
@@ -175,60 +175,67 @@ class _ProductosGeneralState extends State<ProductosGeneral> {
   }
 
   Widget _botonBuscar() {
-    return BlocBuilder<ProductosBloc, ProductosState>(
-      builder: (context, stateGestion) {
-        return Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: BlocBuilder<UserBloc, UserState>(
-                builder: (context, state) {
-                  return ElevatedButton(
-                      onPressed: stateGestion.chargin
-                          ? null
-                          : () async {
-                              usuariosBloc
-                                  .add(ChangeDataProductosEvent([], true));
-
-                              Map<String, dynamic> datos = {};
-
-                              if (_tbxController.text.isNotEmpty) {
-                                datos.addAll(
-                                    {_valueFiltro.value: _tbxController.text});
-                              }
-
-                              List<ProductoConUsuarioModel> data = await ProductoService()
-                                  .verProductos(state.user!.token);
-
-                              if (data.isNotEmpty) {
-                                usuariosBloc
-                                    .add(ChangeDataProductosEvent(data, false));
-                              } else {
-                                usuariosBloc
-                                    .add(ChangeDataProductosEvent([], false));
-                              }
-                            },
-                      child: const Text('Buscar'),
-                      style: ElevatedButton.styleFrom(
-          shadowColor: Color.fromARGB(118, 33, 149, 243),
-          primary: Color.fromARGB(118, 33, 149, 243),
-        ),);
-                },
-              ),
-            ),
-            BlocBuilder<UserBloc, UserState>(
+  return BlocBuilder<ProductosBloc, ProductosState>(
+    builder: (context, stateGestion) {
+      return Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
-                  return _botonNuevo(
-                      {'route': CrearProducto(editar: false)});
-                
+                return ElevatedButton(
+                  onPressed: stateGestion.chargin
+                      ? null
+                      : () async {
+                          usuariosBloc
+                              .add(ChangeDataProductosEvent([], true));
+
+                          Map<String, dynamic> datos = {};
+
+                          if (_tbxController.text.isNotEmpty) {
+                            datos.addAll(
+                                {_valueFiltro.value: _tbxController.text});
+                          }
+
+                          List<ProductoConUsuarioModel> data;
+
+                          if (state.user!.rol == 'V') {
+                            data = await ProductoService()
+                                .verProductosUsuario(state.user!.token);
+                          } else {
+                            data = await ProductoService()
+                                .verProductos(state.user!.token);
+                          }
+
+                          if (data.isNotEmpty) {
+                            usuariosBloc
+                                .add(ChangeDataProductosEvent(data, false));
+                          } else {
+                            usuariosBloc
+                                .add(ChangeDataProductosEvent([], false));
+                          }
+                        },
+                  child: const Text('Buscar'),
+                  style: ElevatedButton.styleFrom(
+                    shadowColor: Color.fromARGB(118, 33, 149, 243),
+                    primary: Color.fromARGB(118, 33, 149, 243),
+                  ),
+                );
               },
             ),
-            stateGestion.chargin ? util.loading() : const Text('')
-          ],
-        );
-      },
-    );
-  }
+          ),
+          BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              return _botonNuevo({'route': CrearProducto(editar: false)});
+            },
+          ),
+          stateGestion.chargin ? util.loading() : const Text('')
+        ],
+      );
+    },
+  );
+}
+
 
   Widget _filters(
       BuildContext context, List data, ValueNotifier<String> controlador) {
@@ -376,7 +383,7 @@ class _DataSource extends DataTableSource {
         DataCell(Text(dato.descripcion)),
         DataCell(Text(dato.cantidad)),
         DataCell(Text(dato.precio)),
-        DataCell(Text(dato.creador.nombre+' '+dato.creador.apellido)),
+        DataCell(Text(dato.creador.nombre + ' ' + dato.creador.apellido)),
         DataCell(
           ElevatedButton(
             onPressed: () {
@@ -388,8 +395,7 @@ class _DataSource extends DataTableSource {
                 false,
                 false,
               ], {
-                'route':
-                    CrearProducto(editar: true, userEdit: dato)
+                'route': CrearProducto(editar: true, userEdit: dato)
               }));
             },
             child: const Text('Editar'),

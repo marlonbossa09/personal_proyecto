@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
-import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'package:personal_proyecto/screens/inicio.dart';
 import 'package:personal_proyecto/screens/usuarios.dart';
 import 'package:personal_proyecto/services/usuariosService.dart';
@@ -175,11 +174,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                   etitle: 'Apellido:',
                   esubtitle: crearTextFormField(
                       'Apellido', 'Apellido', apellidoController, false, false),
-                ),
-                ListTilePersonalizado(
-                  etitle: 'Rol',
-                  esubtitle: crearTextFormField('Username',
-                      'Ingrese su username.', rolController, false, false),
                 ),
                 ListTilePersonalizado(
                   etitle: 'Email',

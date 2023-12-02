@@ -6,6 +6,8 @@ import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
 import 'package:personal_proyecto/screens/busquedas.dart';
 import 'package:personal_proyecto/screens/crearProducto.dart';
+import 'package:personal_proyecto/screens/informacionPerfil.dart';
+import 'package:personal_proyecto/screens/misPublicaciones.dart';
 import 'package:personal_proyecto/screens/perfilUsuario.dart';
 import 'package:personal_proyecto/screens/productosGeneral.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
@@ -41,31 +43,43 @@ class _HomeState extends State<Home> {
       'icono': const Icon(Icons.search),
       'menu': {'route': Busquedas()},
       'pos': 1,
-      'roles': 'A,V,L'
+      'roles': 'A,V,C'
+    },{
+      'titulo': 'Productos',
+      'icono': const Icon(Icons.production_quantity_limits),
+      'menu': {'route': MisPublicaciones()},
+      'pos': 2,
+      'roles': 'V'
     },
     {
       'titulo': 'Crear Producto',
       'icono': const Icon(Icons.notifications),
-      'menu': {'route': Usuarios()},
+      'menu': {'route': CrearProducto(editar: false,)},
       'pos': 2,
       'roles': 'A,V'
+    },
+    {
+      'titulo': 'Usuarios',
+      'icono': const Icon(Icons.unfold_less_rounded),
+      'menu': {'route': Usuarios()},
+      'pos': 2,
+      'roles': 'V'
     },
     {
       'titulo': 'ProductosGeneral',
       'icono': const Icon(Icons.production_quantity_limits),
       'menu': {'route': ProductosGeneral()},
-      'pos': 2,
+      'pos': 3,
       'roles': 'A,V'
     },
     {
       'titulo': 'Perfil',
       'icono': const Icon(Icons.person),
       'menu': {
-        'route': CrearProducto(
-          editar: false,
+        'route': inofrmacionPerfil(
         )
       },
-      'pos': 2,
+      'pos': 4,
       'roles': 'A,V,C'
     }
   ];
@@ -106,22 +120,6 @@ class _HomeState extends State<Home> {
         backgroundColor: Color.fromARGB(29, 0, 0, 0),
         elevation: 2,
         actions: [
-          TextButton.icon(
-              icon: const Icon(Icons.settings, color: Colors.blue),
-              label: const Text('Editar Perfil',
-                  style: TextStyle(color: Color.fromARGB(171, 0, 0, 0))),
-              onPressed: () {
-                eventsBloc.add(ChangeStateMenu([
-                  false,
-                  true,
-                  false,
-                  false,
-                  false,
-                  false,
-                ], {
-                  'route': PerfilUsuario()
-                }));
-              }),
           TextButton.icon(
               icon: const Icon(Icons.exit_to_app, color: Colors.blue),
               label: const Text('Cerrar sesión',

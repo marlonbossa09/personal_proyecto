@@ -14,7 +14,7 @@ class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
-  final correoController = TextEditingController(text: 'user@email.com');
+  final correoController = TextEditingController(text: 'jqwj@gmail.com');
   final passwordController = TextEditingController(text: '12345');
   final nombreController = TextEditingController();
   final apellidoController = TextEditingController();
@@ -28,6 +28,13 @@ class Login extends StatelessWidget {
   late LoginBloc loginBloc;
   late UserBloc userBloc;
   final Utils util = Utils();
+  List<Map> filters = [
+    {"id": "V", "nombre": "Vendedor"},
+    {"id": "C", "nombre": "Comprador"},
+  ];
+
+  final ValueNotifier<String> _valueFiltro = ValueNotifier<String>('V');
+
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +217,7 @@ class Login extends StatelessWidget {
           SizedBox(
             width: size.width * 0.3,
             height: size.height * 0.35,
-            child: _form(),
+            child: _form(context),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -226,7 +233,7 @@ class Login extends StatelessWidget {
                         Map<String, dynamic> datosUser = {
                           "nombre": nombreController.text,
                           "apellido": apellidoController.text,
-                          "rol": rolController.text,
+                          "rol": _valueFiltro.value,
                           "email": emailController.text,
                           "celular": celularController.text,
                           "clave": passwordController.text
@@ -277,7 +284,7 @@ class Login extends StatelessWidget {
     );
   }
 
- Widget _form() {
+ Widget _form(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.all(10.0),
     child: Form(
@@ -300,13 +307,10 @@ class Login extends StatelessWidget {
               false,
               false,
             ),
-            _crearTextFormField(
-              'Ingrese el rol',
-              'Ingrese el rol',
-              rolController,
-              false,
-              false,
-            ),
+            ListTilePersonalizado(
+                  etitle: 'Rol: ',
+                  esubtitle: _filters(context, filters, _valueFiltro),
+                ),
             _crearTextFormField(
               'Email',
               'Ingrese su Email.',
@@ -337,6 +341,38 @@ class Login extends StatelessWidget {
   );
 }
 
+
+  Widget _filters(
+      BuildContext context, List data, ValueNotifier<String> controlador) {
+    return Container(
+      height: 39,
+      child: InputDecorator(
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.0))),
+          contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
+        ),
+        child: DropdownButtonHideUnderline(
+            child: ValueListenableBuilder<String>(
+          valueListenable: controlador,
+          builder: (BuildContext context, String value, Widget? child) {
+            return DropdownButton<String>(
+              value: value,
+              onChanged: (String? newValue) {
+                controlador.value = newValue!;
+              },
+              items: List.generate(data.length, (i) {
+                return DropdownMenuItem(
+                  value: data[i]['id'],
+                  child: Text(data[i]['nombre']),
+                );
+              }),
+            );
+          },
+        )),
+      ),
+    );
+  }
 
   Widget _crearTextFormField(String title, String subTitle,
       TextEditingController controller, bool pass, bool validarEmail) {
