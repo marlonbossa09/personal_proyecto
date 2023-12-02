@@ -20,8 +20,8 @@ class _NotificacionesState extends State<Notificaciones> {
   var eventsBloc;
   var usuariosBloc;
   var user_sesionBloc;
-  List<Estudiantes> users = [];
-  late Estudiantes hola;
+  List<UsuarioGeneralModel> users = [];
+  late UsuarioGeneralModel hola;
 
   @override
   Widget build(BuildContext context) {

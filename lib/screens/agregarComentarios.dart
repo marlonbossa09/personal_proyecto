@@ -27,9 +27,9 @@ class _AgregarComentarioState extends State<AgregarComentario> {
   var eventsBloc;
   var usuariosBloc;
   var user_sesionBloc;
-  List<Estudiantes> users = [];
+  List<UsuarioGeneralModel> users = [];
   final _formKey = GlobalKey<FormState>();
-  late Estudiantes hola;
+  late UsuarioGeneralModel hola;
   final mensajeController = TextEditingController();
   final contenidoController = TextEditingController();
 

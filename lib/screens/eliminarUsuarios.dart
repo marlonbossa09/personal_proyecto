@@ -14,7 +14,7 @@ import 'package:personal_proyecto/models/EstudiantesModel.dart';
 
 class EliminarUsuarios extends StatefulWidget {
   final eliminar;
-  final Estudiantes? userEdit;
+  final UsuarioGeneralModel? userEdit;
   const EliminarUsuarios({super.key, this.eliminar, this.userEdit});
 
   @override
@@ -182,7 +182,7 @@ class _EliminarUsuariosState extends State<EliminarUsuarios> {
     );
   }
 
-  _cargarDatos(Estudiantes user) async {
+  _cargarDatos(UsuarioGeneralModel user) async {
     nombreController.text = user.nombre;
     apellidoController.text = user.apellido;
     rolController.text = user.rol;

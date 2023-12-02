@@ -20,8 +20,8 @@ class _BusquedasState extends State<Busquedas> {
   var eventsBloc;
   var usuariosBloc;
   var user_sesionBloc;
-  List<Estudiantes> users = [];
-  late Estudiantes hola;
+  List<UsuarioGeneralModel> users = [];
+  late UsuarioGeneralModel hola;
   final _tbxController = TextEditingController();
 
   @override

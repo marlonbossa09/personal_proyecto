@@ -12,7 +12,7 @@ class LoginService {
   final String USUARIOACTUAL = '/estudiantes/actual';
   final String RENEWTOKEN = '/refresh';
 
-  Future<Estudiantes> iniciarSesion(String email, String clave) async {
+  Future<UsuarioGeneralModel> iniciarSesion(String email, String clave) async {
     final response = await http.post(
       Uri.parse('$URL$LOGIN'),
       headers: <String, String>{
@@ -24,13 +24,13 @@ class LoginService {
     );
     print(response.body);
     if (response.statusCode == 200 || response.statusCode == 400) {
-      return Estudiantes.fromJson(jsonDecode(response.body));
+      return UsuarioGeneralModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Ocurrió un error durante el inicio de sesión.');
     }
   }
 
-  Future<Estudiantes> usuarioActual(String token) async {
+  Future<UsuarioGeneralModel> usuarioActual(String token) async {
   final response = await http.get(
     Uri.parse('$URL$USUARIOACTUAL'),
     headers: {'Authorization': 'Bearer $token'},
@@ -42,14 +42,14 @@ class LoginService {
       if (respuesta.isNotEmpty) {
         Map<String, dynamic> userMap = Map<String, dynamic>.from(respuesta[0]);
         userMap.addAll({"token": token});
-        return Estudiantes.fromJson(userMap);
+        return UsuarioGeneralModel.fromJson(userMap);
       } else {
         throw Exception('No se encontró ningún usuario con el ID proporcionado.');
       }
     } else if (respuesta is Map) {
       Map<String, dynamic> stringMap = Map<String, dynamic>.from(respuesta);
       stringMap.addAll({"token": token});
-      return Estudiantes.fromJson(stringMap);
+      return UsuarioGeneralModel.fromJson(stringMap);
     } else {
       throw Exception('El formato de respuesta no es válido.');
     }

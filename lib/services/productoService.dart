@@ -64,7 +64,7 @@ Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
         final productoJson = responseBody['producto'];
         
         final creadorData = productoJson['creador'];
-        Estudiantes creador = Estudiantes.fromJson(creadorData);
+        UsuarioGeneralModel creador = UsuarioGeneralModel.fromJson(creadorData);
 
         List<dynamic> comentariosJson = productoJson['comentarios'] ?? [];
         List<Comentario> comentarios = comentariosJson.map((comment) => Comentario.fromJson(comment)).toList();
@@ -79,7 +79,7 @@ Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
           descripcion: '',
           cantidad: '',
           precio: '',
-          creador: Estudiantes(token: '', clave: '', email: '', celular: '', rol: '', apellido: '', nombre: '', codigo: 0),
+          creador: UsuarioGeneralModel(token: '', clave: '', email: '', celular: '', rol: '', apellido: '', nombre: '', codigo: 0),
           comentarios: [],
         );
       }
@@ -94,7 +94,7 @@ Future<ProductoConUsuarioModel> verProductoId(int id, String token) async {
       descripcion: '',
       cantidad: '',
       precio: '',
-      creador: Estudiantes(token: '', clave: '', email: '', celular: '', rol: '', apellido: '', nombre: '', codigo: 0),
+      creador: UsuarioGeneralModel(token: '', clave: '', email: '', celular: '', rol: '', apellido: '', nombre: '', codigo: 0),
       comentarios: [],
     );
   }

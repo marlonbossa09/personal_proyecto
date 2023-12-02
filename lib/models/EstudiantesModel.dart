@@ -1,4 +1,4 @@
-class Estudiantes {
+class UsuarioGeneralModel {
   final int codigo;
   final String nombre;
   final String apellido;
@@ -8,7 +8,7 @@ class Estudiantes {
   final String clave;
   final String token;
 
-  const Estudiantes({
+  const UsuarioGeneralModel({
     required this.codigo,
     required this.nombre,
     required this.apellido,
@@ -19,8 +19,8 @@ class Estudiantes {
     required this.token,
   });
 
-  factory Estudiantes.fromJson(Map<String, dynamic> json) {
-    return Estudiantes(
+  factory UsuarioGeneralModel.fromJson(Map<String, dynamic> json) {
+    return UsuarioGeneralModel(
       codigo: json['codigo'] ?? 0,
     nombre: json['nombre'] ?? "",
     apellido: json['apellido'] ?? "",
@@ -39,7 +39,7 @@ class ProductoConUsuarioModel {
   final String descripcion;
   final String cantidad;
   final String precio;
-  final Estudiantes creador;
+  final UsuarioGeneralModel creador;
   final List<Comentario> comentarios;
 
   const ProductoConUsuarioModel({
@@ -59,7 +59,7 @@ class ProductoConUsuarioModel {
       descripcion: json['descripcion'] ?? "",
       cantidad: json['cantidad'] ?? "",
       precio: json['precio'] ?? "",
-      creador: Estudiantes.fromJson(json['creador'] ?? {}),
+      creador: UsuarioGeneralModel.fromJson(json['creador'] ?? {}),
       comentarios: comentarios,
     );
   }
@@ -71,7 +71,7 @@ class ProductoConUsuarioModel {
 class Comentario {
   final int id;
   final String contenido;
-  final Estudiantes autor;
+  final UsuarioGeneralModel autor;
 
   const Comentario({
     required this.id,
@@ -83,7 +83,7 @@ class Comentario {
     return Comentario(
       id: json['id'] ?? 0,
       contenido: json['contenido'] ?? "",
-      autor: Estudiantes.fromJson(json['autor'] ?? {}),
+      autor: UsuarioGeneralModel.fromJson(json['autor'] ?? {}),
     );
   }
 }

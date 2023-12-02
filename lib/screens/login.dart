@@ -126,7 +126,7 @@ class Login extends StatelessWidget {
                             final user = await LoginService()
                                 .usuarioActual(jwtResponse.token);
 
-                            final newUser = Estudiantes(
+                            final newUser = UsuarioGeneralModel(
                               codigo: user.codigo,
                               nombre: user.nombre,
                               apellido: user.apellido,

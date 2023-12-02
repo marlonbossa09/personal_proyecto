@@ -197,7 +197,7 @@ class _UsuariosState extends State<Usuarios> {
                                     {_valueFiltro.value: _tbxController.text});
                               }
 
-                              List<Estudiantes> data = await UsuariosService()
+                              List<UsuarioGeneralModel> data = await UsuariosService()
                                   .verUsuario(state.user!.token);
 
                               if (data.isNotEmpty) {
@@ -362,7 +362,7 @@ class _DataSource extends DataTableSource {
       return null;
     }
 
-    Estudiantes dato = _data[index];
+    UsuarioGeneralModel dato = _data[index];
     return DataRow.byIndex(
       index: index,
       color: MaterialStateColor.resolveWith((states) {

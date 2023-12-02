@@ -3,7 +3,7 @@ part of 'usuarios_bloc.dart';
 @immutable
 abstract class UsuariosState {
   final bool existUser;
-  final List<Estudiantes>? usuarios;
+  final List<UsuarioGeneralModel>? usuarios;
   final bool chargin;
 
   const UsuariosState({
@@ -18,7 +18,7 @@ class UsuariosInitialState extends UsuariosState {
 }
 
 class UsuariosSetState extends UsuariosState {
-  final List<Estudiantes> usuarios;
+  final List<UsuarioGeneralModel> usuarios;
   final bool chargin_;
   const UsuariosSetState(this.usuarios,this.chargin_) : super(existUser: true, usuarios: usuarios,chargin: chargin_);
 }

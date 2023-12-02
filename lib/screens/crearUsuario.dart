@@ -14,7 +14,7 @@ import 'package:personal_proyecto/models/EstudiantesModel.dart';
 
 class CrearUsuario extends StatefulWidget {
   final editar;
-  final Estudiantes? userEdit;
+  final UsuarioGeneralModel? userEdit;
   const CrearUsuario({super.key, this.editar, this.userEdit});
 
   @override
@@ -232,7 +232,7 @@ Map<String, dynamic> datos = {};
     );
   }
 
-  _cargarDatos(Estudiantes user) async {
+  _cargarDatos(UsuarioGeneralModel user) async {
     nombreController.text = user.nombre;
     apellidoController.text = user.apellido;
     rolController.text = user.rol;
@@ -314,7 +314,7 @@ Map<String, dynamic> datos = {};
     );
   }
   Widget _filters(
-    BuildContext context, List<Estudiantes> data, ValueNotifier<Estudiantes?> controlador) {
+    BuildContext context, List<UsuarioGeneralModel> data, ValueNotifier<UsuarioGeneralModel?> controlador) {
   return Container(
     height: 39,
     child: InputDecorator(
@@ -324,16 +324,16 @@ Map<String, dynamic> datos = {};
         contentPadding: EdgeInsets.symmetric(horizontal: 5.0),
       ),
       child: DropdownButtonHideUnderline(
-        child: ValueListenableBuilder<Estudiantes?>(
+        child: ValueListenableBuilder<UsuarioGeneralModel?>(
           valueListenable: controlador,
-          builder: (BuildContext context, Estudiantes? value, Widget? child) {
-            return DropdownButton<Estudiantes>(
+          builder: (BuildContext context, UsuarioGeneralModel? value, Widget? child) {
+            return DropdownButton<UsuarioGeneralModel>(
               value: value,
-              onChanged: (Estudiantes? newValue) {
+              onChanged: (UsuarioGeneralModel? newValue) {
                 controlador.value = newValue;
               },
               items: data.map((category) {
-                return DropdownMenuItem<Estudiantes>(
+                return DropdownMenuItem<UsuarioGeneralModel>(
                   value: category,
                   child: Text(category.nombre),
                 );

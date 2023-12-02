@@ -25,10 +25,10 @@ class _VerProductosState extends State<VerProductos> {
   var eventsBloc;
   var usuariosBloc;
   var user_sesionBloc;
-  List<Estudiantes> users = [];
+  List<UsuarioGeneralModel> users = [];
   List<ProductoConUsuarioModel> productos = [];
 
-  late Estudiantes hola;
+  late UsuarioGeneralModel hola;
 
   @override
   void initState() {

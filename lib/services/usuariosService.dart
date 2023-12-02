@@ -130,7 +130,7 @@ class UsuariosService {
     }
   }
 
-  Future<List<Estudiantes>> verUsuario(String token) async {
+  Future<List<UsuarioGeneralModel>> verUsuario(String token) async {
     final response = await http.get(
       Uri.parse('$URL$_BUSCAR_USUARIO'),
       headers: {
@@ -145,8 +145,8 @@ class UsuariosService {
       if (response.body.isNotEmpty) {
         try {
           List<dynamic> jsonList = jsonDecode(response.body);
-          List<Estudiantes> productos =
-              jsonList.map((json) => Estudiantes.fromJson(json)).toList();
+          List<UsuarioGeneralModel> productos =
+              jsonList.map((json) => UsuarioGeneralModel.fromJson(json)).toList();
           return productos;
         } catch (e) {
           print('Error de decodificación JSON: $e');

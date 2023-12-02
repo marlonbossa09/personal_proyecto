@@ -6,7 +6,7 @@ abstract class UsuariosEvent {}
 class InitialUsuariosEvent extends UsuariosEvent {}
 
 class ChangeDataUsuariosEvent extends UsuariosEvent {
-  final List<Estudiantes> user;
+  final List<UsuarioGeneralModel> user;
   final bool chargin;
   ChangeDataUsuariosEvent(this.user,this.chargin);
 }

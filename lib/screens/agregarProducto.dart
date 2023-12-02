@@ -23,8 +23,8 @@ class _AgregarProductoState extends State<AgregarProducto> {
   var eventsBloc;
   var usuariosBloc;
   var user_sesionBloc;
-  List<Estudiantes> users = [];
-  late Estudiantes hola;
+  List<UsuarioGeneralModel> users = [];
+  late UsuarioGeneralModel hola;
   final nombreController = TextEditingController();
   final cantidadController = TextEditingController();
   final precioController = TextEditingController();
