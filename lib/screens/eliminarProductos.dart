@@ -1,7 +1,7 @@
 import 'dart:js_util';
 
 import 'package:personal_proyecto/blocs/productos/productos_bloc.dart';
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

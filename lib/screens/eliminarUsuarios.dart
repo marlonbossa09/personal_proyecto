@@ -10,7 +10,7 @@ import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
 import 'package:personal_proyecto/util/utils.dart';
 import 'package:personal_proyecto/widgets/personalizados.dart';
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 
 class EliminarUsuarios extends StatefulWidget {
   final eliminar;

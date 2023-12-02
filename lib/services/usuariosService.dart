@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'package:personal_proyecto/services/varGlobales.dart';
 
 class UsuariosService {
@@ -13,12 +13,11 @@ class UsuariosService {
   String _ELIMINAR_USUARIO = 'delete/';
 
   Future<Map<String, dynamic>> createUser(
-      Map<String, dynamic> data, String token) async {
+      Map<String, dynamic> data) async {
     try {
       final response = await http.post(
         Uri.parse('$URL$_BUSCAR_USUARIO$_CREAR_USUARIO'),
         headers: {
-          'Authorization': 'Bearer $token',
           "Access-Control-Allow-Origin": "*",
           'Accept': '*/*',
           'Content-Type': 'application/json; charset=UTF-8'

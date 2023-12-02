@@ -3,31 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/Login/login_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
-import 'package:personal_proyecto/models/loginModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'package:personal_proyecto/screens/home.dart';
 import 'package:personal_proyecto/services/loginService.dart';
+import 'package:personal_proyecto/services/usuariosService.dart';
 import 'package:personal_proyecto/util/utils.dart';
+import 'package:personal_proyecto/widgets/personalizados.dart';
 
 class Login extends StatelessWidget {
-  Login({super.key});
-  Utils util = Utils();
+  Login({Key? key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
   final correoController = TextEditingController(text: 'user@email.com');
   final passwordController = TextEditingController(text: '12345');
-
   final nombreController = TextEditingController();
   final apellidoController = TextEditingController();
   final emailController = TextEditingController();
+  final rolController = TextEditingController();
+  final celularController = TextEditingController();
   final passController = TextEditingController();
-  final repeatPassController = TextEditingController();
+  final ValueNotifier<bool> _changePassword = ValueNotifier<bool>(true);
 
-  var size;
-
-  final ValueNotifier<String> _tipoRol = ValueNotifier<String>('G');
-  var loginBloc;
-  var userBloc;
+  late Size size;
+  late LoginBloc loginBloc;
+  late UserBloc userBloc;
+  final Utils util = Utils();
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +36,17 @@ class Login extends StatelessWidget {
     userBloc = BlocProvider.of<UserBloc>(context);
 
     return Scaffold(
-      body: SafeArea(child: Center(child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
-          return state.vistaLogin
-              ? _crearFormRegistrarse(context)
-              : _crearFormLogin(context);
-        },
-      ))),
+      body: SafeArea(
+        child: Center(
+          child: BlocBuilder<LoginBloc, LoginState>(
+            builder: (context, state) {
+              return state.vistaLogin
+                  ? _crearFormRegistrarse(context)
+                  : _crearFormLogin(context);
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -55,9 +59,10 @@ class Login extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: const <BoxShadow>[
           BoxShadow(
-              color: Color.fromARGB(29, 0, 0, 0),
-              blurRadius: 8.0,
-              spreadRadius: 4.0),
+            color: Color.fromARGB(29, 0, 0, 0),
+            blurRadius: 8.0,
+            spreadRadius: 4.0,
+          ),
         ],
       ),
       child: Column(
@@ -73,24 +78,31 @@ class Login extends StatelessWidget {
                   child: Text(
                     'BAYOU',
                     style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold),
+                      fontSize: 20,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: crearTextFormField('Correo', 'Ingrese un correo.',
-                      correoController, false, true),
+                  child: _crearTextFormField(
+                    'Correo',
+                    'Ingrese un correo.',
+                    correoController,
+                    false,
+                    true,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: crearTextFormField(
-                      'Contraseña',
-                      'Ingrese una contraseña.',
-                      passwordController,
-                      true,
-                      false),
+                  child: _crearTextFormField(
+                    'Contraseña',
+                    'Ingrese una contraseña.',
+                    passwordController,
+                    true,
+                    false,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
@@ -98,12 +110,13 @@ class Login extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextButton(
-                          onPressed: () {
-                            correoController.clear();
-                            passwordController.clear();
-                            loginBloc.add(ChangeFormEvent(true));
-                          },
-                          child: const Text('Registrarse.'))
+                        onPressed: () {
+                          correoController.clear();
+                          passwordController.clear();
+                          loginBloc.add(ChangeFormEvent(true));
+                        },
+                        child: const Text('Registrarse.'),
+                      ),
                     ],
                   ),
                 ),
@@ -117,8 +130,8 @@ class Login extends StatelessWidget {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           try {
-                            final jwtResponse =
-                                await LoginService().iniciarSesion(
+                            final jwtResponse = await LoginService()
+                                .iniciarSesion(
                               correoController.text,
                               passwordController.text,
                             );
@@ -147,7 +160,10 @@ class Login extends StatelessWidget {
                           } catch (error) {
                             print(error);
                             util.message(
-                                context, error.toString(), Colors.orange);
+                              context,
+                              error.toString(),
+                              Colors.orange,
+                            );
                           }
                         }
                       },
@@ -172,9 +188,10 @@ class Login extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: const <BoxShadow>[
           BoxShadow(
-              color: Color.fromARGB(29, 0, 0, 0),
-              blurRadius: 8.0,
-              spreadRadius: 4.0),
+            color: Color.fromARGB(29, 0, 0, 0),
+            blurRadius: 8.0,
+            spreadRadius: 4.0,
+          ),
         ],
       ),
       child: Column(
@@ -184,37 +201,16 @@ class Login extends StatelessWidget {
             child: Text(
               'Registrarse',
               style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold),
+                fontSize: 20,
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           SizedBox(
             width: size.width * 0.3,
             height: size.height * 0.35,
-            child: Form(
-              key: _formKey,
-              child: GridView(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 3),
-                children: [
-                  crearTextFormField('Nombres', 'Ingrese su nombre.',
-                      nombreController, false, false),
-                  crearTextFormField('Apellidos', 'Ingrese su apellido.',
-                      apellidoController, false, false),
-                  crearTextFormField('Correo', 'Ingrese su correo.',
-                      emailController, false, true),
-                  crearTextFormField('Contraseña', 'Ingrese una contraseña.',
-                      passController, true, false),
-                  crearTextFormField(
-                      'Repetir contraseña',
-                      'Repita la contraseña.',
-                      repeatPassController,
-                      true,
-                      false),
-                ],
-              ),
-            ),
+            child: _form(),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -222,29 +218,127 @@ class Login extends StatelessWidget {
               width: size.width * 0.4,
               height: size.height * 0.05,
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: ElevatedButton(
-                  onPressed: () {}, child: const Text('Registrarse')),
+              child: BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        Map<String, dynamic> datosUser = {
+                          "nombre": nombreController.text,
+                          "apellido": apellidoController.text,
+                          "rol": rolController.text,
+                          "email": emailController.text,
+                          "celular": celularController.text,
+                          "clave": passwordController.text
+                        };
+                        Map data = await UsuariosService()
+                            .createUser(datosUser);
+                        if (data['success']) {
+                          nombreController.clear();
+                          passwordController.clear();
+                          apellidoController.clear();
+                          emailController.clear();
+                          celularController.clear();
+                          util.message(
+                            context,
+                            'Se creó correctamente',
+                            Colors.green,
+                          );
+                        } else {
+                          util.message(
+                            context,
+                            'Error al crear el usuario',
+                            Colors.orange,
+                          );
+                        }
+                      }
+                    },
+                    child: const Text('Registrarse'),
+                  );
+                },
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 5.0),
             child: TextButton(
-                onPressed: () {
-                  nombreController.clear();
-                  apellidoController.clear();
-                  emailController.clear();
-                  passController.clear();
-                  repeatPassController.clear();
-                  loginBloc.add(ChangeFormEvent(false));
-                },
-                child: const Text('¿Ya estas registrado? has clic aqui.')),
+              onPressed: () {
+                nombreController.clear();
+                apellidoController.clear();
+                emailController.clear();
+                passController.clear();
+                loginBloc.add(ChangeFormEvent(false));
+              },
+              child: const Text('¿Ya estas registrado? has clic aqui.'),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget crearTextFormField(String title, String subTitle,
+ Widget _form() {
+  return Padding(
+    padding: const EdgeInsets.all(10.0),
+    child: Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _crearTextFormField(
+              'Username',
+              'Ingrese su username.',
+              nombreController,
+              false,
+              false,
+            ),
+            _crearTextFormField(
+              'Apellido',
+              'Apellido',
+              apellidoController,
+              false,
+              false,
+            ),
+            _crearTextFormField(
+              'Ingrese el rol',
+              'Ingrese el rol',
+              rolController,
+              false,
+              false,
+            ),
+            _crearTextFormField(
+              'Email',
+              'Ingrese su Email.',
+              emailController,
+              false,
+              true,
+            ),
+            _crearTextFormField(
+              'Ingrese su celular',
+              'Ingrese su celular.',
+              celularController,
+              false,
+              false,
+            ),
+            ListTilePersonalizado(
+              etitle: 'Contraseña:',
+              esubtitle: _crearTextFormFieldPassword(
+                  'Contraseña',
+                  'Ingrese una contraseña.',
+                  passwordController,
+                  true,
+                  _changePassword.value),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+
+  Widget _crearTextFormField(String title, String subTitle,
       TextEditingController controller, bool pass, bool validarEmail) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
@@ -261,13 +355,35 @@ class Login extends StatelessWidget {
                   ? null
                   : "Ingrese un correo valido.";
             }
-            if (title.contains("Repetir contraseña")) {
-              if (passController.text != repeatPassController.text) {
-                return 'Contraseñas no coinciden.';
-              }
-            }
           }
           return null;
+        },
+      ),
+    );
+  }
+
+  Widget _crearTextFormFieldPassword(String title, String subTitle,
+      TextEditingController controller, bool pass, bool readonly) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: ValueListenableBuilder<bool>(
+        valueListenable: _changePassword,
+        builder: (BuildContext context, bool value, Widget? child) {
+          return TextFormField(
+            readOnly: !value,
+            obscureText: pass,
+            controller: controller,
+            decoration: util.inputDecoration(title, false),
+            validator: (value) {
+              if ((value == null || value.isEmpty)) {
+                return subTitle;
+              } else if (_changePassword.value &&
+                  (value == null || value.isEmpty)) {
+                return subTitle;
+              }
+              return null;
+            },
+          );
         },
       ),
     );

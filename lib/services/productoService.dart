@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'dart:convert';
 
 import 'package:personal_proyecto/services/varGlobales.dart';

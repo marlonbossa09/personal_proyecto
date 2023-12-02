@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:personal_proyecto/models/JwtResponse.dart';
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'package:personal_proyecto/models/loginModel.dart';
 import 'dart:convert';
 

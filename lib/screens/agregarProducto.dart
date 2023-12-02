@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'package:personal_proyecto/screens/inicio.dart';
 import 'package:personal_proyecto/util/utils.dart';
 import 'package:personal_proyecto/widgets/personalizados.dart';

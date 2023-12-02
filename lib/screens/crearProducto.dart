@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/productos/productos_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
-import 'package:personal_proyecto/models/EstudiantesModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'package:personal_proyecto/models/ProductosModel.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
 import 'package:personal_proyecto/screens/verProductos.dart';
