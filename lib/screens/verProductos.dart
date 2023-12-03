@@ -205,46 +205,48 @@ class _VerProductosState extends State<VerProductos> {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Confirmación'),
-                                  content: Text('Se enviará al chat privado'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Cancelar'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        final url =
-                                            'https://api.whatsapp.com/send?phone=57${productos.creador.celular}&text=we';
-                                        if (await canLaunch(url)) {
-                                          await launch(url);
-                                        } else {
-                                          throw 'No se pudo lanzar el enlace $url';
-                                        }
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Aceptar'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.blue,
-                            primary: Colors.blue,
+                        if (state.user!.rol !='V') 
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Confirmación'),
+                                    content: Text('Se enviará al chat privado'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Cancelar'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          final url =
+                                              'https://api.whatsapp.com/send?phone=57${productos.creador.celular}&text=we';
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          } else {
+                                            throw 'No se pudo lanzar el enlace $url';
+                                          }
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Aceptar'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shadowColor: Colors.blue,
+                              primary: Colors.blue,
+                            ),
+                            child: Text('Contactar',
+                                style: TextStyle(color: Colors.white)),
                           ),
-                          child: Text('Contactar',
-                              style: TextStyle(color: Colors.white)),
-                        ),
+                          if (state.user!.rol !='V') 
                         ElevatedButton(
                           onPressed: () {
                             eventsBloc.add(ChangeStateMenu([
@@ -309,30 +311,44 @@ class _VerProductosState extends State<VerProductos> {
     );
   }
 
-  Widget _contenedorComentario(Comentario comentario) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${comentario.autor.nombre}', // Asegúrate de tener la propiedad autor en tu modelo Comentario
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 5),
-          Text(
-            '${comentario.contenido}',
-            style: TextStyle(fontSize: 14),
-          ),
-        ],
-      ),
-    );
-  }
+ Widget _contenedorComentario(Comentario comentario) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 10),
+    padding: EdgeInsets.all(15),
+    decoration: BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.6),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '${comentario.autor.nombre}',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+        Text(
+          '${comentario.contenido}',
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget formNoData() {
     return Container(

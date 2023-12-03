@@ -37,39 +37,39 @@ class _HomeState extends State<Home> {
       'menu': {'route': Publicaciones()},
       'pos': 0,
       'roles': 'A,V,C'
-    },
-    {
-      'titulo': 'Productos',
-      'icono': const Icon(Icons.search),
-      'menu': {'route': Busquedas()},
-      'pos': 1,
-      'roles': 'A,V,C'
     },{
       'titulo': 'Productos',
-      'icono': const Icon(Icons.production_quantity_limits),
+      'icono': const Icon(Icons.grid_view_sharp),
       'menu': {'route': MisPublicaciones()},
-      'pos': 2,
-      'roles': 'V'
+      'pos': 1,
+      'roles': 'A,V'
     },
     {
       'titulo': 'Crear Producto',
-      'icono': const Icon(Icons.notifications),
+      'icono': const Icon(Icons.add),
       'menu': {'route': CrearProducto(editar: false,)},
       'pos': 2,
       'roles': 'A,V'
     },
     {
-      'titulo': 'Usuarios',
-      'icono': const Icon(Icons.unfold_less_rounded),
-      'menu': {'route': Usuarios()},
+      'titulo': 'Busquedas',
+      'icono': const Icon(Icons.search),
+      'menu': {'route': Busquedas()},
       'pos': 2,
-      'roles': 'V'
+      'roles': 'A,C'
     },
     {
-      'titulo': 'ProductosGeneral',
-      'icono': const Icon(Icons.production_quantity_limits),
-      'menu': {'route': ProductosGeneral()},
+      'titulo': 'Gestionar Usuarios',
+      'icono': const Icon(Icons.person_add),
+      'menu': {'route': Usuarios()},
       'pos': 3,
+      'roles': 'A'
+    },
+    {
+      'titulo': 'Gestionar Productos',
+      'icono': const Icon(Icons.portrait_outlined),
+      'menu': {'route': ProductosGeneral()},
+      'pos': 4,
       'roles': 'A,V'
     },
     {
@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
         'route': inofrmacionPerfil(
         )
       },
-      'pos': 4,
+      'pos': 5,
       'roles': 'A,V,C'
     }
   ];
@@ -235,15 +235,17 @@ class _HomeState extends State<Home> {
 
 
   Widget _crearListitles(
-    String titulo,
-    IconData iconData,
-    Map menu,
-    int j,
-    bool bloc,
-    double iconSize, 
-    Color iconColor, 
-  ) {
-    return IconButton(
+  String titulo,
+  IconData iconData,
+  Map menu,
+  int j,
+  bool bloc,
+  double iconSize,
+  Color iconColor,
+) {
+  return Tooltip(
+    message: titulo, // Agregar el título al Tooltip
+    child: IconButton(
       icon: Icon(
         iconData,
         size: iconSize,
@@ -260,6 +262,8 @@ class _HomeState extends State<Home> {
         }
         eventsBloc.add(ChangeStateMenu(states, menu));
       },
-    );
-  }
+    ),
+  );
+}
+
 }

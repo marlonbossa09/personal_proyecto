@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/Login/login_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
@@ -93,22 +94,24 @@ class Login extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: _crearTextFormField(
+                  child: crearTextFormField(
                     'Correo',
                     'Ingrese un correo.',
                     correoController,
                     false,
                     true,
+                    false
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: _crearTextFormField(
+                  child: crearTextFormField(
                     'Contraseña',
                     'Ingrese una contraseña.',
                     passwordController,
                     true,
                     false,
+                    false
                   ),
                 ),
                 Padding(
@@ -293,37 +296,41 @@ class Login extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _crearTextFormField(
+            crearTextFormField(
               'Username',
               'Ingrese su username.',
               nombreController,
               false,
               false,
+              false
             ),
-            _crearTextFormField(
+            crearTextFormField(
               'Apellido',
               'Apellido',
               apellidoController,
               false,
               false,
+              false
             ),
             ListTilePersonalizado(
                   etitle: 'Rol: ',
                   esubtitle: _filters(context, filters, _valueFiltro),
                 ),
-            _crearTextFormField(
+            crearTextFormField(
               'Email',
               'Ingrese su Email.',
               emailController,
               false,
               true,
+              false
             ),
-            _crearTextFormField(
+            crearTextFormField(
               'Ingrese su celular',
               'Ingrese su celular.',
               celularController,
               false,
               false,
+              true
             ),
             ListTilePersonalizado(
               etitle: 'Contraseña:',
@@ -374,29 +381,32 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget _crearTextFormField(String title, String subTitle,
-      TextEditingController controller, bool pass, bool validarEmail) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: TextFormField(
-        obscureText: pass,
-        controller: controller,
-        decoration: util.inputDecoration(title, true),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return subTitle;
-          } else {
-            if (validarEmail) {
-              return EmailValidator.validate(controller.text)
-                  ? null
-                  : "Ingrese un correo valido.";
-            }
+ Widget crearTextFormField(String title, String subTitle, TextEditingController controller, bool pass, bool validarEmail, bool soloNumeros) {
+  return Padding(
+    padding: const EdgeInsets.all(5.0),
+    child: TextFormField(
+      obscureText: pass,
+      controller: controller,
+      keyboardType: soloNumeros ? TextInputType.number : TextInputType.text, // Tipo de teclado numérico
+      inputFormatters: soloNumeros ? [FilteringTextInputFormatter.digitsOnly] : null, // Solo permite dígitos
+      decoration: util.inputDecoration(title, false),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return subTitle;
+        } else if (soloNumeros) {
+          // Validar si es un número positivo
+          if (double.tryParse(value) == null || double.parse(value) < 0) {
+            return 'Ingrese un número positivo.';
           }
-          return null;
-        },
-      ),
-    );
-  }
+        } else {
+          // Otra lógica de validación si es necesario
+        }
+        return null;
+      },
+    ),
+  );
+}
+
 
   Widget _crearTextFormFieldPassword(String title, String subTitle,
       TextEditingController controller, bool pass, bool readonly) {

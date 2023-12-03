@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/productos/productos_bloc.dart';
@@ -243,17 +244,17 @@ class _CrearProductoState extends State<CrearProducto> {
           ListTilePersonalizado(
             etitle: 'Nombre del producto: ',
             esubtitle: crearTextFormField(
-                'producto', 'Ingrese producto', nombreController, false, false),
+                'producto', 'Ingrese producto', nombreController, false, false,false),
           ),
           ListTilePersonalizado(
             etitle: 'Cantidad: ',
             esubtitle: crearTextFormField('Cantidad', 'Ingrese la cantidad',
-                cantidadController, false, false),
+                cantidadController, false, false,true),
           ),
           ListTilePersonalizado(
             etitle: 'Precio: ',
             esubtitle: crearTextFormField(
-                'Precio', 'Ingrese el Precio', precioController, false, false),
+                'Precio', 'Ingrese el Precio', precioController, false, false,true),
           ),
           const Text(
             'Agregue una descripción',
@@ -323,29 +324,32 @@ class _CrearProductoState extends State<CrearProducto> {
     );
   }
 
-  Widget crearTextFormField(String title, String subTitle,
-      TextEditingController controller, bool pass, bool validarEmail) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: TextFormField(
-        obscureText: pass,
-        controller: controller,
-        decoration: util.inputDecoration(title, false),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return subTitle;
-          } else {
-            if (validarEmail) {
-              return EmailValidator.validate(controller.text)
-                  ? null
-                  : "Ingrese un correo valido.";
-            }
+  Widget crearTextFormField(String title, String subTitle, TextEditingController controller, bool pass, bool validarEmail, bool soloNumeros) {
+  return Padding(
+    padding: const EdgeInsets.all(5.0),
+    child: TextFormField(
+      obscureText: pass,
+      controller: controller,
+      keyboardType: soloNumeros ? TextInputType.number : TextInputType.text, // Tipo de teclado numérico
+      inputFormatters: soloNumeros ? [FilteringTextInputFormatter.digitsOnly] : null, // Solo permite dígitos
+      decoration: util.inputDecoration(title, false),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return subTitle;
+        } else if (soloNumeros) {
+          // Validar si es un número positivo
+          if (double.tryParse(value) == null || double.parse(value) < 0) {
+            return 'Ingrese un número positivo.';
           }
-          return null;
-        },
-      ),
-    );
-  }
+        } else {
+          // Otra lógica de validación si es necesario
+        }
+        return null;
+      },
+    ),
+  );
+}
+
 
   Widget crearTextFormFieldPassword(String title, String subTitle,
       TextEditingController controller, bool pass, bool readonly) {
