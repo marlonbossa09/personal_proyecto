@@ -20,17 +20,14 @@ class Usuarios extends StatefulWidget {
 class _UsuariosState extends State<Usuarios> {
   Utils util = Utils();
   List<Map> filters = [
-    {"id": "userName", "nombre": "Username"},
-    {"id": "idRol", "nombre": "IDRol"},
-    {"id": "idEmpresa", "nombre": "IDEmpresa"},
-    {"id": "idSede", "nombre": "idSede"},
+    {"id": "nombre", "nombre": "nombre"},
   ];
 
   var size;
   var eventsBloc;
   var usuariosBloc;
 
-  final ValueNotifier<String> _valueFiltro = ValueNotifier<String>('userName');
+  final ValueNotifier<String> _valueFiltro = ValueNotifier<String>('nombre');
   final _tbxController = TextEditingController();
   @override
   void dispose() {
@@ -154,14 +151,6 @@ class _UsuariosState extends State<Usuarios> {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3, childAspectRatio: 3, crossAxisSpacing: 3),
               children: [
-                ListTilePersonalizado(
-                  etitle: 'Buscar por: ',
-                  esubtitle: _filters(context, filters, _valueFiltro),
-                ),
-                ListTilePersonalizado(
-                  etitle: '',
-                  esubtitle: crearTextFormField('', '', _tbxController, false),
-                ),
                 ListTilePersonalizado(
                   etitle: '',
                   esubtitle: _botonBuscar(),

@@ -297,7 +297,7 @@ class _VerProductosState extends State<VerProductos> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Comentarios',
+          Text('Reseñas',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
           Column(

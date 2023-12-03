@@ -155,14 +155,6 @@ class _ProductosGeneralState extends State<ProductosGeneral> {
                   crossAxisCount: 3, childAspectRatio: 3, crossAxisSpacing: 3),
               children: [
                 ListTilePersonalizado(
-                  etitle: 'Buscar por: ',
-                  esubtitle: _filters(context, filters, _valueFiltro),
-                ),
-                ListTilePersonalizado(
-                  etitle: '',
-                  esubtitle: crearTextFormField('', '', _tbxController, false),
-                ),
-                ListTilePersonalizado(
                   etitle: '',
                   esubtitle: _botonBuscar(),
                 ),

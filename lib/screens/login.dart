@@ -15,8 +15,8 @@ class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
-  final correoController = TextEditingController(text: 'jqwj@gmail.com');
-  final passwordController = TextEditingController(text: '12345');
+  final correoController = TextEditingController();
+  final passwordController = TextEditingController();
   final nombreController = TextEditingController();
   final apellidoController = TextEditingController();
   final emailController = TextEditingController();
