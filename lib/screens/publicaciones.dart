@@ -128,7 +128,7 @@ class _PublicacionesState extends State<Publicaciones> {
             itemCount: productos.length,
             itemBuilder: (context, index) {
               ProductoConUsuarioModel discusion = productos[index];
-              return _contenedorParticipantes(discusion);
+              return _contenedorProductos(discusion);
             },
           ),
         ),
@@ -143,7 +143,7 @@ class _PublicacionesState extends State<Publicaciones> {
     return htmlString.replaceAll(exp, '');
   }
 
-  Widget _contenedorParticipantes(ProductoConUsuarioModel productos) {
+  Widget _contenedorProductos(ProductoConUsuarioModel productos) {
   return Container(
     margin: const EdgeInsets.all(10.0),
     padding: const EdgeInsets.all(20.0),

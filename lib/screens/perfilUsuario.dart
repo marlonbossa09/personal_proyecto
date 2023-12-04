@@ -76,7 +76,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: _botonCancelar({'route': Inicio()}),
+                            child: _botonCancelar({'route': PerfilUsuario()}),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -115,7 +115,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                                           false,
                                           false,
                                         ], {
-                                          'route': Usuarios()
+                                          'route': PerfilUsuario()
                                         }));
                                       } else {
                                         util.message(context, 'Error al editar',

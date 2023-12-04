@@ -33,7 +33,7 @@ class _InicioState extends State<Inicio> {
                     Center(
                       child: Container(
                         margin: EdgeInsets.all(12),
-                        child: Image(image: AssetImage('assets/pescado.jpg')),
+                        child: Image(image: AssetImage('assets/BAYOU.jpeg')),
                       ),
                     ),
                     Positioned.fill(

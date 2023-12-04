@@ -381,31 +381,30 @@ class Login extends StatelessWidget {
     );
   }
 
- Widget crearTextFormField(String title, String subTitle, TextEditingController controller, bool pass, bool validarEmail, bool soloNumeros) {
+Widget crearTextFormField(String title, String subTitle, TextEditingController controller, bool pass, bool validarEmail, bool soloNumeros) {
   return Padding(
     padding: const EdgeInsets.all(5.0),
     child: TextFormField(
       obscureText: pass,
       controller: controller,
-      keyboardType: soloNumeros ? TextInputType.number : TextInputType.text, // Tipo de teclado numérico
-      inputFormatters: soloNumeros ? [FilteringTextInputFormatter.digitsOnly] : null, // Solo permite dígitos
-      decoration: util.inputDecoration(title, false),
+      keyboardType: soloNumeros ? TextInputType.number : TextInputType.text,
+      inputFormatters: soloNumeros ? [FilteringTextInputFormatter.digitsOnly] : null,
+      decoration: util.inputDecoration(title, true), 
       validator: (value) {
         if (value == null || value.isEmpty) {
           return subTitle;
         } else if (soloNumeros) {
-          // Validar si es un número positivo
           if (double.tryParse(value) == null || double.parse(value) < 0) {
             return 'Ingrese un número positivo.';
           }
         } else {
-          // Otra lógica de validación si es necesario
         }
         return null;
       },
     ),
   );
 }
+
 
 
   Widget _crearTextFormFieldPassword(String title, String subTitle,

@@ -29,20 +29,19 @@ class _CrearUsuarioState extends State<CrearUsuario> {
   var usuariosBloc;
 
   final _formKey = GlobalKey<FormState>();
-   final nombreController = TextEditingController();
+  final nombreController = TextEditingController();
   final passwordController = TextEditingController();
   final repeatPasswordController = TextEditingController();
   final emailController = TextEditingController();
   final celularController = TextEditingController();
   final apellidoController = TextEditingController();
-Map<String, dynamic> datos = {};
-List<Map> filters = [
+  Map<String, dynamic> datos = {};
+  List<Map> filters = [
     {"id": "V", "nombre": "Vendedor"},
     {"id": "C", "nombre": "Comprador"},
   ];
 
   final ValueNotifier<String> _valueFiltro = ValueNotifier<String>('V');
-
 
   final ValueNotifier<bool> _changePassword = ValueNotifier<bool>(true);
   TextStyle textStyle = const TextStyle(
@@ -55,8 +54,8 @@ List<Map> filters = [
     usuariosBloc.add(InitialStateEvent());
   }
 
- @override
-  void initState(){
+  @override
+  void initState() {
     super.initState();
 
     if (widget.editar) {
@@ -136,25 +135,25 @@ List<Map> filters = [
                                           onPressed: () async {
                                             if (_formKey.currentState!
                                                 .validate()) {
-
                                               Map<String, dynamic> datosUser = {
-                                                "nombre":
-                                                    nombreController.text,
+                                                "nombre": nombreController.text,
                                                 "apellido":
                                                     apellidoController.text,
                                                 "rol": _valueFiltro.value,
                                                 "email": emailController.text,
-                                                "celular": celularController.text,
+                                                "celular":
+                                                    celularController.text,
                                                 "clave": passwordController.text
                                               };
-                                              Map<String, dynamic> datosUser2 = {
-                                                "nombre":
-                                                    nombreController.text,
+                                              Map<String, dynamic> datosUser2 =
+                                                  {
+                                                "nombre": nombreController.text,
                                                 "apellido":
                                                     apellidoController.text,
                                                 "rol": _valueFiltro.value,
                                                 "email": emailController.text,
-                                                "celular": celularController.text,
+                                                "celular":
+                                                    celularController.text,
                                               };
 
                                               if (widget.editar) {
@@ -162,10 +161,11 @@ List<Map> filters = [
                                                     await UsuariosService()
                                                         .editarUsuario(
                                                             datosUser2,
-                                                            widget.userEdit!.codigo,
+                                                            widget.userEdit!
+                                                                .codigo,
                                                             state.user!.token);
 
-                                                if (data['success']){
+                                                if (data['success']) {
                                                   nombreController.clear();
                                                   passwordController.clear();
                                                   apellidoController.clear();
@@ -175,8 +175,8 @@ List<Map> filters = [
                                                       context,
                                                       'Se editó correctamente',
                                                       Colors.green);
-                                                  eventsBloc.add(
-                                                      ChangeStateMenu([
+                                                  eventsBloc
+                                                      .add(ChangeStateMenu([
                                                     true,
                                                     false,
                                                     false,
@@ -214,9 +214,7 @@ List<Map> filters = [
                                                 }
                                               }
                                             }
-                                            
                                           },
-                                          
                                           child: Text(widget.editar
                                               ? "Actualizar"
                                               : "Guardar")),
@@ -280,41 +278,45 @@ List<Map> filters = [
             ListTilePersonalizado(
               etitle: 'Ingrese nombre',
               esubtitle: crearTextFormField('Username', 'Ingrese su username.',
-                  nombreController, false, false,false),
-            ),ListTilePersonalizado(
-              etitle: 'Apellido:',
-              esubtitle: crearTextFormField(
-                  'Apellido', 'Apellido', apellidoController, false, false,false),
+                  nombreController, false, false, false),
             ),
             ListTilePersonalizado(
-                  etitle: 'Rol: ',
-                  esubtitle: _filters(context, filters, _valueFiltro),
-                ),
+              etitle: 'Apellido:',
+              esubtitle: crearTextFormField('Apellido', 'Apellido',
+                  apellidoController, false, false, false),
+            ),
+            ListTilePersonalizado(
+              etitle: 'Rol: ',
+              esubtitle: _filters(context, filters, _valueFiltro),
+            ),
             ListTilePersonalizado(
               etitle: 'Email',
-              esubtitle: crearTextFormField('Email', 'Ingrese su Email.',  emailController, false, false,false),
-            //  esubtitle: _filters2(context, _selectedItemFilter),
+              esubtitle: crearTextFormField('Email', 'Ingrese su Email.',
+                  emailController, false, false, false),
+              //  esubtitle: _filters2(context, _selectedItemFilter),
             ),
             ListTilePersonalizado(
               etitle: 'Celular',
-              esubtitle: crearTextFormField('Username', 'Ingrese su celular.',  celularController, false, false,true),
-            //  esubtitle: _filters2(context, _selectedItemFilter),
+              esubtitle: crearTextFormField('Username', 'Ingrese su celular.',
+                  celularController, false, false, true),
+              //  esubtitle: _filters2(context, _selectedItemFilter),
             ),
-          if(!editar)
-            ListTilePersonalizado(
-              etitle: 'Contraseña:',
-              esubtitle: crearTextFormFieldPassword(
-                  'Contraseña',
-                  'Ingrese una contraseña.',
-                  passwordController,
-                  true,
-                  _changePassword.value),
-            ),
+            if (!editar)
+              ListTilePersonalizado(
+                etitle: 'Contraseña:',
+                esubtitle: crearTextFormFieldPassword(
+                    'Contraseña',
+                    'Ingrese una contraseña.',
+                    passwordController,
+                    true,
+                    _changePassword.value),
+              ),
           ],
         ),
       ),
     );
   }
+
   Widget _filters(
       BuildContext context, List data, ValueNotifier<String> controlador) {
     return Container(
@@ -347,33 +349,41 @@ List<Map> filters = [
     );
   }
 
-
-  Widget crearTextFormField(String title, String subTitle, TextEditingController controller, bool pass, bool validarEmail, bool soloNumeros) {
-  return Padding(
-    padding: const EdgeInsets.all(5.0),
-    child: TextFormField(
-      obscureText: pass,
-      controller: controller,
-      keyboardType: soloNumeros ? TextInputType.number : TextInputType.text, // Tipo de teclado numérico
-      inputFormatters: soloNumeros ? [FilteringTextInputFormatter.digitsOnly] : null, // Solo permite dígitos
-      decoration: util.inputDecoration(title, false),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return subTitle;
-        } else if (soloNumeros) {
-          // Validar si es un número positivo
-          if (double.tryParse(value) == null || double.parse(value) < 0) {
-            return 'Ingrese un número positivo.';
+  Widget crearTextFormField(
+      String title,
+      String subTitle,
+      TextEditingController controller,
+      bool pass,
+      bool validarEmail,
+      bool soloNumeros) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: TextFormField(
+        obscureText: pass,
+        controller: controller,
+        keyboardType: soloNumeros
+            ? TextInputType.number
+            : TextInputType.text, // Tipo de teclado numérico
+        inputFormatters: soloNumeros
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : null, // Solo permite dígitos
+        decoration: util.inputDecoration(title, false),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return subTitle;
+          } else if (soloNumeros) {
+            // Validar si es un número positivo
+            if (double.tryParse(value) == null || double.parse(value) < 0) {
+              return 'Ingrese un número positivo.';
+            }
+          } else {
+            // Otra lógica de validación si es necesario
           }
-        } else {
-          // Otra lógica de validación si es necesario
-        }
-        return null;
-      },
-    ),
-  );
-}
-
+          return null;
+        },
+      ),
+    );
+  }
 
   Widget crearTextFormFieldPassword(String title, String subTitle,
       TextEditingController controller, bool pass, bool readonly) {
