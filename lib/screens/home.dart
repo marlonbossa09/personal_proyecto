@@ -37,7 +37,8 @@ class _HomeState extends State<Home> {
       'menu': {'route': Publicaciones()},
       'pos': 0,
       'roles': 'A,V,C'
-    },{
+    },
+    {
       'titulo': 'Productos',
       'icono': const Icon(Icons.grid_view_sharp),
       'menu': {'route': MisPublicaciones()},
@@ -47,7 +48,11 @@ class _HomeState extends State<Home> {
     {
       'titulo': 'Crear Producto',
       'icono': const Icon(Icons.add),
-      'menu': {'route': CrearProducto(editar: false,)},
+      'menu': {
+        'route': CrearProducto(
+          editar: false,
+        )
+      },
       'pos': 2,
       'roles': 'A,V'
     },
@@ -55,30 +60,27 @@ class _HomeState extends State<Home> {
       'titulo': 'Busquedas',
       'icono': const Icon(Icons.search),
       'menu': {'route': Busquedas()},
-      'pos': 2,
+      'pos': 3,
       'roles': 'A,C'
     },
     {
       'titulo': 'Gestionar Usuarios',
       'icono': const Icon(Icons.person_add),
       'menu': {'route': Usuarios()},
-      'pos': 3,
+      'pos': 4,
       'roles': 'A'
     },
     {
       'titulo': 'Gestionar Productos',
       'icono': const Icon(Icons.portrait_outlined),
       'menu': {'route': ProductosGeneral()},
-      'pos': 4,
+      'pos': 5,
       'roles': 'A,V'
     },
     {
       'titulo': 'Perfil',
       'icono': const Icon(Icons.person),
-      'menu': {
-        'route': inofrmacionPerfil(
-        )
-      },
+      'menu': {'route': InformacionPerfil()},
       'pos': 5,
       'roles': 'A,V,C'
     }
@@ -187,83 +189,80 @@ class _HomeState extends State<Home> {
   }
 
   Widget _barraMenu(BuildContext context) {
-  return BlocBuilder<EventsBloc, EventsState>(
-    builder: (context, state) {
-      return BlocBuilder<UserBloc, UserState>(
-        builder: (context, user) {
-          states = state.state;
-          String rol = user.user!.rol;
-          List<Map<String, dynamic>> menusVal = [];
-          for (Map<String, dynamic> menu in menus) {
-            if (menu['roles'].toString().contains(rol)) {
-              menusVal.add(menu);
+    return BlocBuilder<EventsBloc, EventsState>(
+      builder: (context, state) {
+        return BlocBuilder<UserBloc, UserState>(
+          builder: (context, user) {
+            states = state.state;
+            String rol = user.user!.rol;
+            List<Map<String, dynamic>> menusVal = [];
+            for (Map<String, dynamic> menu in menus) {
+              if (menu['roles'].toString().contains(rol)) {
+                menusVal.add(menu);
+              }
             }
-          }
-          return Container(
-            color: Colors.blueAccent,
-            height: 50,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(menusVal.length, (i) {
-                  if (menusVal[i]['roles'].contains(user.user!.rol)) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                      child: _crearListitles(
-                        menusVal[i]['titulo'],
-                        menusVal[i]['icono'].icon, 
-                        menusVal[i]['menu'],
-                        menusVal[i]['pos'],
-                        true,
-                        40.0,
-                        const Color.fromARGB(255, 5, 51, 88), 
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                }),
+            return Container(
+              color: Colors.blueAccent,
+              height: 50,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(menusVal.length, (i) {
+                    if (menusVal[i]['roles'].contains(user.user!.rol)) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                        child: _crearListitles(
+                          menusVal[i]['titulo'],
+                          menusVal[i]['icono'].icon,
+                          menusVal[i]['menu'],
+                          menusVal[i]['pos'],
+                          true,
+                          40.0,
+                          const Color.fromARGB(255, 5, 51, 88),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
+                ),
               ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-
+            );
+          },
+        );
+      },
+    );
+  }
 
   Widget _crearListitles(
-  String titulo,
-  IconData iconData,
-  Map menu,
-  int j,
-  bool bloc,
-  double iconSize,
-  Color iconColor,
-) {
-  return Tooltip(
-    message: titulo, // Agregar el título al Tooltip
-    child: IconButton(
-      icon: Icon(
-        iconData,
-        size: iconSize,
-        color: iconColor,
-      ),
-      onPressed: () {
-        if (bloc) {
-          for (int i = 0; i < states.length; i++) {
-            states[i] = false;
+    String titulo,
+    IconData iconData,
+    Map menu,
+    int j,
+    bool bloc,
+    double iconSize,
+    Color iconColor,
+  ) {
+    return Tooltip(
+      message: titulo, // Agregar el título al Tooltip
+      child: IconButton(
+        icon: Icon(
+          iconData,
+          size: iconSize,
+          color: iconColor,
+        ),
+        onPressed: () {
+          if (bloc) {
+            for (int i = 0; i < states.length; i++) {
+              states[i] = false;
+            }
+            select[0] = false;
+            select[1] = false;
+            states[j] = true;
           }
-          select[0] = false;
-          select[1] = false;
-          states[j] = true;
-        }
-        eventsBloc.add(ChangeStateMenu(states, menu));
-      },
-    ),
-  );
-}
-
+          eventsBloc.add(ChangeStateMenu(states, menu));
+        },
+      ),
+    );
+  }
 }

@@ -8,7 +8,7 @@ abstract class EventsState {
 }
 
 class EventsInitialState extends EventsState {
-  EventsInitialState() : super(state:[false,false,false,false,false,false],menu: {'route':Inicio()});
+  EventsInitialState() : super(state:[false,false,false,false,false,false,false],menu: {'route':Inicio()});
 }
 
 class EventsChangeState extends EventsState {

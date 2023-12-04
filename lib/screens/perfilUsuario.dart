@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
+import 'package:personal_proyecto/screens/informacionPerfil.dart';
 import 'package:personal_proyecto/screens/inicio.dart';
+import 'package:personal_proyecto/screens/publicaciones.dart';
 import 'package:personal_proyecto/screens/usuarios.dart';
 import 'package:personal_proyecto/services/usuariosService.dart';
 import 'package:personal_proyecto/util/utils.dart';
@@ -19,19 +21,12 @@ class PerfilUsuario extends StatefulWidget {
 class _PerfilUsuarioState extends State<PerfilUsuario> {
   Utils util = Utils();
   var eventsBloc;
-  List<bool> states = [true, false, false, false, false, false];
+  List<bool> states = [false, false, false, false, false, false,true];
   var empresaBloc;
   Map<String, dynamic> datos = {};
 
-  List<Map> roles = [
-    {"id": "1", "nombre": "Administrador"},
-    {"id": "2", "nombre": "Empresa"},
-    {"id": "3", "nombre": "Sede"}
-  ];
-
   final _formKey = GlobalKey<FormState>();
 
-  final ValueNotifier<String> _selectedItemFilter = ValueNotifier<String>('1');
 
   final nombreController = TextEditingController();
   final passwordController = TextEditingController();
@@ -47,7 +42,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   @override
   Widget build(BuildContext context) {
     eventsBloc = BlocProvider.of<EventsBloc>(context);
-    List<bool> states = [true, false, false, false, false];
     return Expanded(
         flex: 8,
         child: Container(
@@ -76,7 +70,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: _botonCancelar({'route': PerfilUsuario()}),
+                            child: _botonNuevo({'route': InformacionPerfil()}),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -90,6 +84,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                                         "apellido": apellidoController.text,
                                         "rol": rolController.text,
                                         "email": emailController.text,
+                                        "clave": passwordController.text
                                       };
 
                                       Map data = await UsuariosService()
@@ -108,14 +103,14 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                                             'Se editó correctamente',
                                             Colors.green);
                                         eventsBloc.add(ChangeStateMenu([
-                                          true,
                                           false,
                                           false,
                                           false,
                                           false,
                                           false,
+                                          false,true
                                         ], {
-                                          'route': PerfilUsuario()
+                                          'route': InformacionPerfil()
                                         }));
                                       } else {
                                         util.message(context, 'Error al editar',
@@ -137,75 +132,108 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         ));
   }
 
-  Widget _botonCancelar(Map menu) {
+  Widget _botonNuevo(Map menu) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
-          onPressed: () {
-            eventsBloc.add(ChangeStateMenu(
-                [true, false, false, false, false, false], menu));
-          },
-          child: const Text('Cancelar')),
+        onPressed: () {
+          eventsBloc.add(
+              ChangeStateMenu([false, false, false, false, false, false,false], menu));
+        },
+        style: ElevatedButton.styleFrom(
+          shadowColor: Colors.red,
+          primary: Colors.red,
+        ),
+        child: const Text('Cancelar'),
+      ),
     );
   }
 
+
   Widget _form() {
     return BlocBuilder<UserBloc, UserState>(
-      builder: (context, state) {
-        nombreController.text = state.user!.nombre;
-        apellidoController.text = state.user!.apellido;
-        rolController.text = state.user!.rol;
-        emailController.text = state.user!.email;
-        
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Form(
-            key: _formKey,
-            child: GridView(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, childAspectRatio: 3.5),
-              children: [
-                ListTilePersonalizado(
-                  etitle: 'Ingrese nombre',
-                  esubtitle: crearTextFormField('Username',
-                      'Ingrese su username.', nombreController, false, false),
-                ),
-                ListTilePersonalizado(
-                  etitle: 'Apellido:',
-                  esubtitle: crearTextFormField(
-                      'Apellido', 'Apellido', apellidoController, false, false),
-                ),
-                ListTilePersonalizado(
-                  etitle: 'Email',
-                  esubtitle: crearTextFormField('Email', 'Ingrese su Email.',
-                      emailController, false, false),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 40.0),
-                  child: Row(children: [
-                    util.tituloBlack(
-                        'Actualizar Contraseña', 8.0, 15, Colors.blue, false),
-                    _checkkox(_valueChkActualizar),
-                  ]),
-                ),
-                ValueListenableBuilder<bool>(
-                    valueListenable: _valueChkActualizar,
-                    builder: (BuildContext context, bool check, Widget? child) {
-                      return check
-                          ? crearTextFormField(
-                              'Contraseña',
-                              'Ingrese una contraseña.',
-                              passwordController,
-                              true,
-                              false)
-                          : const Text('');
-                    }),
-              ],
-            ),
+  builder: (context, state) {
+    nombreController.text = state.user!.nombre;
+    apellidoController.text = state.user!.apellido;
+    rolController.text = state.user!.rol;
+    emailController.text = state.user!.email;
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Form(
+        key: _formKey,
+        child: GridView(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 3.5,
           ),
-        );
-      },
+          children: [
+            ListTilePersonalizado(
+              etitle: 'Ingrese nombre',
+              esubtitle: crearTextFormField(
+                'Username',
+                'Ingrese su username.',
+                nombreController,
+                false,
+                false,
+              ),
+            ),
+            ListTilePersonalizado(
+              etitle: 'Apellido:',
+              esubtitle: crearTextFormField(
+                'Apellido',
+                'Apellido',
+                apellidoController,
+                false,
+                false,
+              ),
+            ),
+            ListTilePersonalizado(
+              etitle: 'Email',
+              esubtitle: crearTextFormField(
+                'Email',
+                'Ingrese su Email.',
+                emailController,
+                false,
+                false,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: Row(
+                children: [
+                  util.tituloBlack(
+                    'Actualizar Contraseña',
+                    8.0,
+                    15,
+                    Colors.blue,
+                    false,
+                  ),
+                  _checkkox(_valueChkActualizar),
+                ],
+              ),
+            ),
+            ValueListenableBuilder<bool>(
+              valueListenable: _valueChkActualizar,
+              builder: (BuildContext context, bool check, Widget? child) {
+                return check || passwordController.text.isNotEmpty
+                    ? crearTextFormField(
+                        'Contraseña',
+                        'Ingrese una contraseña.',
+                        passwordController,
+                        true,
+                        false,
+                      )
+                    : const Text('');
+              },
+            ),
+          ],
+        ),
+      ),
     );
+  },
+);
+
   }
 
   Widget _checkkox(ValueNotifier<bool> val) {

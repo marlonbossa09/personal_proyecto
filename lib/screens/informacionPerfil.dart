@@ -9,12 +9,12 @@ import 'package:personal_proyecto/screens/inicio.dart';
 import 'package:personal_proyecto/screens/perfilUsuario.dart';
 import 'package:personal_proyecto/util/utils.dart';
 
-class inofrmacionPerfil extends StatefulWidget {
+class InformacionPerfil extends StatefulWidget {
   @override
-  State<inofrmacionPerfil> createState() => _inofrmacionPerfilState();
+  State<InformacionPerfil> createState() => _InformacionPerfilState();
 }
 
-class _inofrmacionPerfilState extends State<inofrmacionPerfil> {
+class _InformacionPerfilState extends State<InformacionPerfil> {
   Utils util = Utils();
   TextStyle textStyle =
       const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold);
@@ -54,7 +54,7 @@ class _inofrmacionPerfilState extends State<inofrmacionPerfil> {
                   IconButton(
                       onPressed: () {
                         eventsBloc.add(ChangeStateMenu(
-                            [true, true, false, false, false],
+                            [false, false, false, false, false, false, true],
                             {'route': Inicio()}));
                       },
                       icon: Icon(Icons.arrow_back)),
@@ -152,11 +152,11 @@ class _inofrmacionPerfilState extends State<inofrmacionPerfil> {
                       onPressed: () {
                         eventsBloc.add(ChangeStateMenu([
                           false,
-                          true,
                           false,
                           false,
                           false,
                           false,
+                          false,true,
                         ], {
                           'route': PerfilUsuario()
                         }));

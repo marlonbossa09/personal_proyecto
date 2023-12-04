@@ -31,7 +31,6 @@ class _CrearUsuarioState extends State<CrearUsuario> {
   final _formKey = GlobalKey<FormState>();
   final nombreController = TextEditingController();
   final passwordController = TextEditingController();
-  final repeatPasswordController = TextEditingController();
   final emailController = TextEditingController();
   final celularController = TextEditingController();
   final apellidoController = TextEditingController();
