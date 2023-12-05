@@ -21,12 +21,11 @@ class PerfilUsuario extends StatefulWidget {
 class _PerfilUsuarioState extends State<PerfilUsuario> {
   Utils util = Utils();
   var eventsBloc;
-  List<bool> states = [false, false, false, false, false, false,true];
+  List<bool> states = [false, false, false, false, false, false, true];
   var empresaBloc;
   Map<String, dynamic> datos = {};
 
   final _formKey = GlobalKey<FormState>();
-
 
   final nombreController = TextEditingController();
   final passwordController = TextEditingController();
@@ -108,7 +107,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                                           false,
                                           false,
                                           false,
-                                          false,true
+                                          false,
+                                          true
                                         ], {
                                           'route': InformacionPerfil()
                                         }));
@@ -137,8 +137,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
         onPressed: () {
-          eventsBloc.add(
-              ChangeStateMenu([false, false, false, false, false, false,false], menu));
+          eventsBloc.add(ChangeStateMenu(
+              [false, false, false, false, false, false, false], menu));
         },
         style: ElevatedButton.styleFrom(
           shadowColor: Colors.red,
@@ -149,91 +149,89 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     );
   }
 
-
   Widget _form() {
     return BlocBuilder<UserBloc, UserState>(
-  builder: (context, state) {
-    nombreController.text = state.user!.nombre;
-    apellidoController.text = state.user!.apellido;
-    rolController.text = state.user!.rol;
-    emailController.text = state.user!.email;
+      builder: (context, state) {
+        nombreController.text = state.user!.nombre;
+        apellidoController.text = state.user!.apellido;
+        rolController.text = state.user!.rol;
+        emailController.text = state.user!.email;
 
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Form(
-        key: _formKey,
-        child: GridView(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 3.5,
-          ),
-          children: [
-            ListTilePersonalizado(
-              etitle: 'Ingrese nombre',
-              esubtitle: crearTextFormField(
-                'Username',
-                'Ingrese su username.',
-                nombreController,
-                false,
-                false,
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Form(
+            key: _formKey,
+            child: GridView(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 3.5,
               ),
-            ),
-            ListTilePersonalizado(
-              etitle: 'Apellido:',
-              esubtitle: crearTextFormField(
-                'Apellido',
-                'Apellido',
-                apellidoController,
-                false,
-                false,
-              ),
-            ),
-            ListTilePersonalizado(
-              etitle: 'Email',
-              esubtitle: crearTextFormField(
-                'Email',
-                'Ingrese su Email.',
-                emailController,
-                false,
-                false,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 40.0),
-              child: Row(
-                children: [
-                  util.tituloBlack(
-                    'Actualizar Contraseña',
-                    8.0,
-                    15,
-                    Colors.blue,
+              children: [
+                ListTilePersonalizado(
+                  etitle: 'Ingrese nombre',
+                  esubtitle: crearTextFormField(
+                    'Username',
+                    'Ingrese su username.',
+                    nombreController,
+                    false,
                     false,
                   ),
-                  _checkkox(_valueChkActualizar),
-                ],
-              ),
-            ),
-            ValueListenableBuilder<bool>(
-              valueListenable: _valueChkActualizar,
-              builder: (BuildContext context, bool check, Widget? child) {
-                return check || passwordController.text.isNotEmpty
-                    ? crearTextFormField(
-                        'Contraseña',
-                        'Ingrese una contraseña.',
-                        passwordController,
-                        true,
+                ),
+                ListTilePersonalizado(
+                  etitle: 'Apellido:',
+                  esubtitle: crearTextFormField(
+                    'Apellido',
+                    'Apellido',
+                    apellidoController,
+                    false,
+                    false,
+                  ),
+                ),
+                ListTilePersonalizado(
+                  etitle: 'Email',
+                  esubtitle: crearTextFormField(
+                    'Email',
+                    'Ingrese su Email.',
+                    emailController,
+                    false,
+                    false,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 40.0),
+                  child: Row(
+                    children: [
+                      util.tituloBlack(
+                        'Actualizar Contraseña',
+                        8.0,
+                        15,
+                        Colors.blue,
                         false,
-                      )
-                    : const Text('');
-              },
+                      ),
+                      _checkkox(_valueChkActualizar),
+                    ],
+                  ),
+                ),
+                ValueListenableBuilder<bool>(
+                  valueListenable: _valueChkActualizar,
+                  builder: (BuildContext context, bool check, Widget? child) {
+                    return check || passwordController.text.isNotEmpty
+                        ? crearTextFormField(
+                            'Contraseña',
+                            'Ingrese una contraseña.',
+                            passwordController,
+                            true,
+                            false,
+                          )
+                        : const Text('');
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
-  },
-);
-
   }
 
   Widget _checkkox(ValueNotifier<bool> val) {

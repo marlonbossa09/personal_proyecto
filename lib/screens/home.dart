@@ -81,7 +81,7 @@ class _HomeState extends State<Home> {
       'titulo': 'Perfil',
       'icono': const Icon(Icons.person),
       'menu': {'route': InformacionPerfil()},
-      'pos': 5,
+      'pos':6,
       'roles': 'A,V,C'
     }
   ];

@@ -237,6 +237,7 @@ class _CrearUsuarioState extends State<CrearUsuario> {
     apellidoController.text = user.apellido;
     _valueFiltro.value = user.rol;
     emailController.text = user.email;
+    celularController.text = user.celular;
     passwordController.text = '';
   }
 

@@ -57,7 +57,6 @@ Future<List<ProductoConUsuarioModel>> busquedaProductos(String nombre, String to
 
   if (response.statusCode == 200) {
     if (response.body.isNotEmpty) {
-      // Intentar decodificar el JSON
       try {
         List<dynamic> jsonList = jsonDecode(response.body);
         List<ProductoConUsuarioModel> productos = jsonList.map((json) => ProductoConUsuarioModel.fromJson(json, [])).toList();

@@ -102,16 +102,16 @@ class _UsuariosState extends State<Usuarios> {
                                     ),
                                     columns: [
                                       DataColumn(
-                                          label: Text('username',
+                                          label: Text('Nombre',
                                               style: textStyle)),
                                       DataColumn(
+                                          label: Text('Apellido',
+                                              style: textStyle)),
+                                               DataColumn(
                                           label: Text('Rol', style: textStyle)),
                                       DataColumn(
-                                          label: Text('Empresa',
-                                              style: textStyle)),
-                                      DataColumn(
                                           label:
-                                              Text('Sede', style: textStyle)),
+                                              Text('Email', style: textStyle)),
                                       DataColumn(
                                           label:
                                               Text('Celular', style: textStyle)),
@@ -362,8 +362,8 @@ class _DataSource extends DataTableSource {
       }),
       cells: [
         DataCell(Text(dato.nombre)),
-        DataCell(Text(dato.rol)),
         DataCell(Text(dato.apellido)),
+        DataCell(Text(dato.rol)),
         DataCell(Text(dato.email)),
         DataCell(Text(dato.celular)),
         DataCell(
