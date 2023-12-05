@@ -6,6 +6,6 @@ abstract class UserEvent {}
 class InitialUserEvent extends UserEvent {}
 
 class ActivateUserEvent extends UserEvent {
-  final User user;
+  final UsuarioGeneralModel user;
   ActivateUserEvent(this.user);
 }

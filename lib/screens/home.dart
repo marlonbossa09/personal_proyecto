@@ -1,24 +1,17 @@
-import 'package:expansion_widget/expansion_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
 
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/blocs/user/user_bloc.dart';
-import 'package:personal_proyecto/screens/Notificaciones.dart';
-import 'package:personal_proyecto/screens/Perfil.dart';
-import 'package:personal_proyecto/screens/agregarComentarios.dart';
-import 'package:personal_proyecto/screens/agregarProducto.dart';
 import 'package:personal_proyecto/screens/busquedas.dart';
-import 'package:personal_proyecto/screens/comentarios.dart';
-import 'package:personal_proyecto/screens/grid.dart';
-import 'package:personal_proyecto/screens/lideres.dart';
-import 'package:personal_proyecto/screens/page1.dart';
-import 'package:personal_proyecto/screens/page2.dart';
+import 'package:personal_proyecto/screens/crearProducto.dart';
+import 'package:personal_proyecto/screens/informacionPerfil.dart';
+import 'package:personal_proyecto/screens/misPublicaciones.dart';
+import 'package:personal_proyecto/screens/perfilUsuario.dart';
+import 'package:personal_proyecto/screens/productosGeneral.dart';
 import 'package:personal_proyecto/screens/publicaciones.dart';
-import 'package:personal_proyecto/screens/verProductos.dart';
-
-
+import 'package:personal_proyecto/screens/usuarios.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -34,7 +27,7 @@ class _HomeState extends State<Home> {
 
   List<bool> states = [];
 
-final _controladorPrueba = TextEditingController();
+  final _controladorPrueba = TextEditingController();
   List<bool> select = [false, false];
 
   List<Map<String, dynamic>> menus = [
@@ -43,30 +36,78 @@ final _controladorPrueba = TextEditingController();
       'icono': const Icon(Icons.home),
       'menu': {'route': Publicaciones()},
       'pos': 0,
-      'roles': 'A,V,L'
+      'roles': 'A,V,C'
     },
     {
       'titulo': 'Productos',
-      'icono': const Icon(Icons.search),
-      'menu': {'route': Busquedas()},
+      'icono': const Icon(Icons.grid_view_sharp),
+      'menu': {'route': MisPublicaciones()},
       'pos': 1,
-      'roles': 'G,A,V,L'
+      'roles': 'A,V'
     },
     {
       'titulo': 'Crear Producto',
-      'icono': const Icon(Icons.notifications),
-      'menu': {'route': Comentarios()},
+      'icono': const Icon(Icons.add),
+      'menu': {
+        'route': CrearProducto(
+          editar: false,
+        )
+      },
       'pos': 2,
-      'roles': 'A,V,L'
+      'roles': 'A,V'
+    },
+    {
+      'titulo': 'Busquedas',
+      'icono': const Icon(Icons.search),
+      'menu': {'route': Busquedas()},
+      'pos': 3,
+      'roles': 'A,C'
+    },
+    {
+      'titulo': 'Gestionar Usuarios',
+      'icono': const Icon(Icons.person_add),
+      'menu': {'route': Usuarios()},
+      'pos': 4,
+      'roles': 'A'
+    },
+    {
+      'titulo': 'Gestionar Productos',
+      'icono': const Icon(Icons.portrait_outlined),
+      'menu': {'route': ProductosGeneral()},
+      'pos': 5,
+      'roles': 'A,V'
     },
     {
       'titulo': 'Perfil',
       'icono': const Icon(Icons.person),
-      'menu': {'route': AgregarProducto()},
-      'pos': 2,
-      'roles': 'A,V,L'
+      'menu': {'route': InformacionPerfil()},
+      'pos':6,
+      'roles': 'A,V,C'
     }
   ];
+
+  Widget _botonNuevo(Map menu) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          eventsBloc.add(ChangeStateMenu([
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+          ], menu));
+        },
+        style: ElevatedButton.styleFrom(
+          shadowColor: Colors.green,
+          primary: Colors.green,
+        ),
+        child: const Text('Nuevo'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,89 +118,151 @@ final _controladorPrueba = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.blueAccent,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 2,
         automaticallyImplyLeading: false,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('BAYOU',
-                style: TextStyle(
-                    color: Color.fromARGB(171, 0, 0, 0),
-                    fontWeight: FontWeight.bold)),
-          ],
+        backgroundColor: Color.fromARGB(29, 0, 0, 0),
+        elevation: 2,
+        actions: [
+          TextButton.icon(
+              icon: const Icon(Icons.exit_to_app, color: Colors.blue),
+              label: const Text('Cerrar sesión',
+                  style: TextStyle(color: Color.fromARGB(171, 0, 0, 0))),
+              onPressed: () {
+                eventsBloc.add(InitialStateEvent());
+                Navigator.pushReplacementNamed(context, '/');
+              }),
+        ],
+        title: BlocBuilder<UserBloc, UserState>(
+          builder: (context, user) {
+            return Row(
+              children: [
+                SizedBox(width: 10),
+                /*  Text(
+                  'CONTAWEB',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                   ),
+               ),*/
+                Row(
+                  children: [
+                    SizedBox(width: 40),
+                    Text("${user.user!.nombre}",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(width: 40),
+                    Text("${user.user!.email}",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(width: 40),
+                    Text("${user.user!.apellido}",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ],
+            );
+          },
         ),
       ),
       body: Column(
-      children: [
-        BlocBuilder<EventsBloc, EventsState>(
-          builder: (context, state) {
-            var route;
-            state.menu.forEach((key, value) {
-              if (key.toString().contains('route')) {
-                route = value;
-              }
-            });
-            return route;
-          },
-        ),
-       Expanded(
-  flex: 1,
-  child: Container(
-    color: Colors.blueAccent,
-    height: 50, 
-    child: _barraMenu(context),
-  ),
-),
-
-      ],
-    ),
+        children: [
+          BlocBuilder<EventsBloc, EventsState>(
+            builder: (context, state) {
+              var route;
+              state.menu.forEach((key, value) {
+                if (key.toString().contains('route')) {
+                  route = value;
+                }
+              });
+              return route;
+            },
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.blueAccent,
+              height: 50,
+              child: _barraMenu(context),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-Widget _barraMenu(BuildContext context) {
-  List<bool> states = List.filled(menus.length, false);
-  return Container(
-    color: Colors.blueAccent,
-    height: 50, 
-    child: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(menus.length, (index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0), 
-            child: InkWell(
-              onTap: () {
-                _onMenuTapped(menus[index]['menu']);
-              },
-              child: Icon(
-                menus[index]['icono'].icon,
-                size: 35,
-                color: states[index]
-                    ? const Color.fromRGBO(4, 142, 255, 1)
-                    : const Color.fromARGB(255, 5, 51, 88),
+  Widget _barraMenu(BuildContext context) {
+    return BlocBuilder<EventsBloc, EventsState>(
+      builder: (context, state) {
+        return BlocBuilder<UserBloc, UserState>(
+          builder: (context, user) {
+            states = state.state;
+            String rol = user.user!.rol;
+            List<Map<String, dynamic>> menusVal = [];
+            for (Map<String, dynamic> menu in menus) {
+              if (menu['roles'].toString().contains(rol)) {
+                menusVal.add(menu);
+              }
+            }
+            return Container(
+              color: Colors.blueAccent,
+              height: 50,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(menusVal.length, (i) {
+                    if (menusVal[i]['roles'].contains(user.user!.rol)) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                        child: _crearListitles(
+                          menusVal[i]['titulo'],
+                          menusVal[i]['icono'].icon,
+                          menusVal[i]['menu'],
+                          menusVal[i]['pos'],
+                          true,
+                          40.0,
+                          const Color.fromARGB(255, 5, 51, 88),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
+                ),
               ),
-            ),
-          );
-        }),
-      ),
-    ),
-  );
-}
-
-
-
-
-
-
-
-void _onMenuTapped(Map menu) {
-  for (int i = 0; i < states.length; i++) {
-    states[i] = false;
+            );
+          },
+        );
+      },
+    );
   }
 
-  eventsBloc.add(ChangeStateMenu(states, menu));
-}
-
+  Widget _crearListitles(
+    String titulo,
+    IconData iconData,
+    Map menu,
+    int j,
+    bool bloc,
+    double iconSize,
+    Color iconColor,
+  ) {
+    return Tooltip(
+      message: titulo, // Agregar el título al Tooltip
+      child: IconButton(
+        icon: Icon(
+          iconData,
+          size: iconSize,
+          color: iconColor,
+        ),
+        onPressed: () {
+          if (bloc) {
+            for (int i = 0; i < states.length; i++) {
+              states[i] = false;
+            }
+            select[0] = false;
+            select[1] = false;
+            states[j] = true;
+          }
+          eventsBloc.add(ChangeStateMenu(states, menu));
+        },
+      ),
+    );
+  }
 }

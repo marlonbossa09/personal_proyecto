@@ -3,7 +3,6 @@ import 'package:personal_proyecto/blocs/user/user_bloc.dart';
 import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 import 'package:personal_proyecto/screens/crearProducto.dart';
 import 'package:personal_proyecto/screens/eliminarProductos.dart';
-import 'package:personal_proyecto/screens/verProductos.dart';
 import 'package:personal_proyecto/services/productoService.dart';
 import 'package:personal_proyecto/util/utils.dart';
 import 'package:flutter/material.dart';
@@ -11,24 +10,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
 import 'package:personal_proyecto/widgets/personalizados.dart';
 
-class Busquedas extends StatefulWidget {
-  const Busquedas({super.key});
+class ProductosGeneral extends StatefulWidget {
+  const ProductosGeneral({super.key});
 
   @override
-  State<Busquedas> createState() => _BusquedasState();
+  State<ProductosGeneral> createState() => _ProductosGeneralState();
 }
 
-class _BusquedasState extends State<Busquedas> {
+class _ProductosGeneralState extends State<ProductosGeneral> {
   Utils util = Utils();
   List<Map> filters = [
-    {"id": "nombre", "nombre": "Nombre"},
+    {"id": "userName", "nombre": "Username"},
+    {"id": "idRol", "nombre": "IDRol"},
+    {"id": "idEmpresa", "nombre": "IDEmpresa"},
+    {"id": "idSede", "nombre": "idSede"},
   ];
 
   var size;
   var eventsBloc;
   var usuariosBloc;
 
-  final ValueNotifier<String> _valueFiltro = ValueNotifier<String>('nombre');
+  final ValueNotifier<String> _valueFiltro = ValueNotifier<String>('userName');
   final _tbxController = TextEditingController();
   @override
   void dispose() {
@@ -63,7 +65,7 @@ class _BusquedasState extends State<Busquedas> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 util.tituloBlack(
-                                    'BUSQUEDA DE PRODUCTOS', 15.0, 20, Colors.blue, true),
+                                    'PRODUCTOS', 15.0, 20, Colors.blue, true),
                                 _form(context)
                               ],
                             )
@@ -73,19 +75,67 @@ class _BusquedasState extends State<Busquedas> {
                 ),
               ),
               Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: util.boxDecoration(),
-                child: BlocBuilder<ProductosBloc, ProductosState>(
-                  builder: (context, usuariosState) {
-                    return usuariosState.productos != null &&
-                            usuariosState.productos!.isNotEmpty
-                        ? _buildProductsList(usuariosState.productos!)
-                        : formNoData();
-                  },
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: util.boxDecoration(),
+                  child: BlocBuilder<ProductosBloc, ProductosState>(
+                    builder: (context, usuariosState) {
+                      return usuariosState.productos != null &&
+                              usuariosState.productos!.isNotEmpty
+                          ? BlocBuilder<UserBloc, UserState>(
+                              builder: (context, user) {
+                                return PaginatedDataTable(
+                                    header: Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 5),
+                                          child: Icon(Icons.widgets,
+                                              color: Color.fromARGB(
+                                                  255, 0, 140, 255)),
+                                        ),
+                                        util.tituloBlack(
+                                            'TABLA DE RESULTADOS',
+                                            0,
+                                            19,
+                                            const Color.fromARGB(
+                                                255, 12, 60, 100),
+                                            true)
+                                      ],
+                                    ),
+                                    columns: [
+                                      DataColumn(
+                                          label:
+                                              Text('Nombre', style: textStyle)),
+                                      DataColumn(
+                                          label: Text('Descripcion',
+                                              style: textStyle)),
+                                      DataColumn(
+                                          label: Text('Cantidad',
+                                              style: textStyle)),
+                                      DataColumn(
+                                          label:
+                                              Text('Precio', style: textStyle)),
+                                      DataColumn(
+                                          label: Text('Creador',
+                                              style: textStyle)),
+                                      DataColumn(
+                                          label: Text('', style: textStyle)),
+                                      DataColumn(
+                                          label: Text('Acciones',
+                                              style: textStyle)),
+                                    ],
+                                    source: _DataSource(
+                                        usuariosState.productos!, context),
+                                    rowsPerPage: 5,
+                                    arrowHeadColor:
+                                        const Color.fromARGB(255, 12, 60, 100));
+                              },
+                            )
+                          : formNoData();
+                    },
+                  ),
                 ),
               ),
-            ),
             ],
           ),
         ));
@@ -105,14 +155,6 @@ class _BusquedasState extends State<Busquedas> {
                   crossAxisCount: 3, childAspectRatio: 3, crossAxisSpacing: 3),
               children: [
                 ListTilePersonalizado(
-                  etitle: 'Buscar por: ',
-                  esubtitle: _filters(context, filters, _valueFiltro),
-                ),
-                ListTilePersonalizado(
-                  etitle: '',
-                  esubtitle: crearTextFormField('', '', _tbxController, false),
-                ),
-                ListTilePersonalizado(
                   etitle: '',
                   esubtitle: _botonBuscar(),
                 ),
@@ -121,101 +163,6 @@ class _BusquedasState extends State<Busquedas> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildProductsList(List<ProductoConUsuarioModel> productos) {
-    return Column(
-      children: productos
-          .map((producto) => _contenedorParticipantes(producto))
-          .toList(),
-    );
-  }
-  Widget _contenedorParticipantes(ProductoConUsuarioModel productos) {
-    return Container(
-      margin: const EdgeInsets.all(10.0),
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(38, 63, 81, 181),
-        border: Border.all(
-          color: Color.fromARGB(221, 158, 158, 158),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: EdgeInsets.only(right: 10),
-                      child: Image.asset('assets/falcao.jpg', fit: BoxFit.cover),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Publicado por:',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '${productos.creador.nombre} ${productos.creador.apellido}',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '${productos.nombre}',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Precio: ${productos.precio}',
-                  style: TextStyle(fontSize: 15),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    eventsBloc.add(
-                      ChangeStateMenu(
-                        [
-                          true,
-                          false,
-                          false,
-                          false,
-                          false,
-                          false,
-                        ],
-                        {
-                          'route': VerProductos(
-                            productos: productos,
-                          ),
-                        },
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shadowColor: Colors.blue,
-                    primary: Colors.blue,
-                  ),
-                  child: Text('Ver', style: TextStyle(color: Colors.white)),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -244,9 +191,13 @@ class _BusquedasState extends State<Busquedas> {
 
                           List<ProductoConUsuarioModel> data;
 
+                          if (state.user!.rol == 'V') {
                             data = await ProductoService()
-                                .busquedaProductos(_tbxController.text, state.user!.token);
-                          
+                                .verProductosUsuario(state.user!.token);
+                          } else {
+                            data = await ProductoService()
+                                .verProductos(state.user!.token);
+                          }
 
                           if (data.isNotEmpty) {
                             usuariosBloc
@@ -264,6 +215,11 @@ class _BusquedasState extends State<Busquedas> {
                 );
               },
             ),
+          ),
+          BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              return _botonNuevo({'route': CrearProducto(editar: false)});
+            },
           ),
           stateGestion.chargin ? util.loading() : const Text('')
         ],
@@ -387,4 +343,88 @@ class _BusquedasState extends State<Busquedas> {
       ),
     );
   }
+}
+
+class _DataSource extends DataTableSource {
+  _ProductosGeneralState ciudadanos = _ProductosGeneralState();
+
+  BuildContext context;
+  final List _data;
+  var userBloc;
+  var eventsBloc;
+  _DataSource(this._data, this.context);
+
+  DataRow? getRow(int index) {
+    //userBloc = BlocProvider.of<CiudadanosBloc>(context);
+    eventsBloc = BlocProvider.of<EventsBloc>(context);
+    if (index >= _data.length) {
+      return null;
+    }
+
+    ProductoConUsuarioModel dato = _data[index];
+    return DataRow.byIndex(
+      index: index,
+      color: MaterialStateColor.resolveWith((states) {
+        if (index % 2 == 0) {
+          return Color.fromARGB(255, 241, 248, 253);
+        }
+        return Colors.white;
+      }),
+      cells: [
+        DataCell(Text(dato.nombre)),
+        DataCell(Text(dato.descripcion)),
+        DataCell(Text(dato.cantidad)),
+        DataCell(Text(dato.precio)),
+        DataCell(Text(dato.creador.nombre + ' ' + dato.creador.apellido)),
+        DataCell(
+          ElevatedButton(
+            onPressed: () {
+              eventsBloc.add(ChangeStateMenu([
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+              ], {
+                'route': CrearProducto(editar: true, userEdit: dato)
+              }));
+            },
+            child: const Text('Editar'),
+          ),
+        ),
+        DataCell(ElevatedButton(
+          onPressed: () {
+            eventsBloc.add(ChangeStateMenu([
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+            ], {
+              'route': EliminarProductos(
+                eliminar: true,
+                userEdit: dato,
+              )
+            }));
+          },
+          style: ElevatedButton.styleFrom(
+            shadowColor: Colors.red,
+            primary: Colors.red,
+          ),
+          child: const Text('Eliminar'),
+        )),
+      ],
+    );
+  }
+
+  @override
+  int get rowCount => _data.length;
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get selectedRowCount => 0;
 }

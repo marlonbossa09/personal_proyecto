@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:personal_proyecto/models/UserModel.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

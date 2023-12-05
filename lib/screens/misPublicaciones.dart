@@ -11,12 +11,12 @@ import 'package:personal_proyecto/screens/verProductos.dart';
 import 'package:personal_proyecto/services/productoService.dart';
 import 'package:personal_proyecto/util/utils.dart';
 
-class Publicaciones extends StatefulWidget {
+class MisPublicaciones extends StatefulWidget {
   @override
-  State<Publicaciones> createState() => _PublicacionesState();
+  State<MisPublicaciones> createState() => _MisPublicacionesState();
 }
 
-class _PublicacionesState extends State<Publicaciones> {
+class _MisPublicacionesState extends State<MisPublicaciones> {
   Utils util = Utils();
   TextStyle textStyle =
       const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold);
@@ -36,19 +36,26 @@ class _PublicacionesState extends State<Publicaciones> {
   }
 
   void _cargarDatos() async {
-    try {
-      user_sesionBloc = BlocProvider.of<UserBloc>(context);
-      final state = user_sesionBloc.state;
-      final List<ProductoConUsuarioModel> producto =
-          await ProductoService().verProductos(state.user!.token);
+  try {
+    user_sesionBloc = BlocProvider.of<UserBloc>(context);
+    final state = user_sesionBloc.state;
 
-      setState(() {
-        productos = producto;
-      });
-    } catch (error) {
-      print('Error al obtener la lista de foros: $error');
+    List<ProductoConUsuarioModel> producto;
+
+    if (state.user!.rol == 'V') {
+      producto = await ProductoService().verProductosUsuario(state.user!.token);
+    } else {
+      producto = await ProductoService().verProductos(state.user!.token);
     }
+
+    setState(() {
+      productos = producto;
+    });
+  } catch (error) {
+    print('Error al obtener la lista de productos: $error');
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +99,7 @@ class _PublicacionesState extends State<Publicaciones> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         util.tituloBlack(
-                          'Publicaciones',
+                          'MIS Publicaciones',
                           18.0,
                           30,
                           Colors.black,
@@ -128,7 +135,7 @@ class _PublicacionesState extends State<Publicaciones> {
             itemCount: productos.length,
             itemBuilder: (context, index) {
               ProductoConUsuarioModel discusion = productos[index];
-              return _contenedorProductos(discusion);
+              return _contenedorParticipantes(discusion);
             },
           ),
         ),
@@ -143,7 +150,7 @@ class _PublicacionesState extends State<Publicaciones> {
     return htmlString.replaceAll(exp, '');
   }
 
-  Widget _contenedorProductos(ProductoConUsuarioModel productos) {
+  Widget _contenedorParticipantes(ProductoConUsuarioModel productos) {
   return Container(
     margin: const EdgeInsets.all(10.0),
     padding: const EdgeInsets.all(20.0),

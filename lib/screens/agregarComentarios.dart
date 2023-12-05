@@ -1,12 +1,19 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:personal_proyecto/blocs/events/events_bloc.dart';
-import 'package:personal_proyecto/models/UserModel.dart';
-import 'package:personal_proyecto/screens/page1.dart';
+import 'package:personal_proyecto/blocs/user/user_bloc.dart';
+import 'package:personal_proyecto/models/UsuarioGeneralModel.dart';
+import 'package:personal_proyecto/screens/inicio.dart';
+import 'package:personal_proyecto/screens/publicaciones.dart';
+import 'package:personal_proyecto/services/comentarioService.dart';
+import 'package:personal_proyecto/services/productoService.dart';
 import 'package:personal_proyecto/util/utils.dart';
 
 class AgregarComentario extends StatefulWidget {
+  final editar;
+  final ProductoConUsuarioModel? userEdit;
+  AgregarComentario({super.key, this.editar, required this.userEdit});
+
   @override
   State<AgregarComentario> createState() => _AgregarComentarioState();
 }
@@ -19,9 +26,11 @@ class _AgregarComentarioState extends State<AgregarComentario> {
   var eventsBloc;
   var usuariosBloc;
   var user_sesionBloc;
-  List<User> users = [];
-  late User hola;
+  List<UsuarioGeneralModel> users = [];
+  final _formKey = GlobalKey<FormState>();
+  late UsuarioGeneralModel hola;
   final mensajeController = TextEditingController();
+  final contenidoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +62,7 @@ class _AgregarComentarioState extends State<AgregarComentario> {
                       onPressed: () {
                         eventsBloc.add(ChangeStateMenu(
                             [true, true, false, false, false],
-                            {'route': Page1()}));
+                            {'route': Inicio()}));
                       },
                       icon: Icon(Icons.arrow_back)),
                   Row(
@@ -134,44 +143,104 @@ class _AgregarComentarioState extends State<AgregarComentario> {
         children: [
           Expanded(
             child: Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Row(
-      children: [
-        Container(
-          width: 50,
-          height: 50,
-          margin: EdgeInsets.only(right: 10),
-          child: Image.asset('assets/falcao.jpg', fit: BoxFit.cover),
-        ),
-        const Text(
-          'Radamel Falcao',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ],
-    ),
-    SizedBox(height: 10),
-    const Text(
-      '¿Qué desea comentar?',
-      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-    ),
-    crearTextFormMensaje(),
-          SizedBox(height: 20,),
-    Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            shadowColor: Colors.blue,
-            primary: Colors.blue,
-          ),
-          child: Text('Comentar', style: TextStyle(color: Colors.white, fontSize: 20)),
-        ),
-      ],
-    ),
-  ],
-),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      margin: EdgeInsets.only(right: 10),
+                      child:
+                          Image.asset('assets/falcao.jpg', fit: BoxFit.cover),
+                    ),
+                    const Text(
+                      'Radamel Falcao',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                const Text(
+                  '¿Qué desea comentar?',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                crearTextFormMensaje(),
+                SizedBox(
+                  height: 20,
+                ),
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Visibility(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                Map<String, dynamic> datosUser = {
+                                  "contenido": contenidoController.text,
+                                };
+
+                                try {
+                                  final Map<String, dynamic> data = widget
+                                          .editar
+                                      ? await ProductoService().editarProducto(
+                                          datosUser,
+                                          widget.userEdit!.id.toString(),
+                                          state.user!.token)
+                                      : await ComentarioService()
+                                          .crearComentario(
+                                              datosUser,
+                                              widget.userEdit!.id,
+                                              state.user!.token);
+
+                                  if (data['success']) {
+                                    contenidoController.clear();
+                                    util.message(
+                                      context,
+                                      widget.editar
+                                          ? 'Se actualizó correctamente'
+                                          : 'Se creó correctamente',
+                                      Colors.green,
+                                    );
+                                    eventsBloc.add(ChangeStateMenu([
+                                      true,
+                                      false,
+                                      false,
+                                      false,
+                                      false,
+                                      false
+                                    ], {
+                                      'route': Publicaciones()
+                                    }));
+                                  } else {
+                                    util.message(
+                                      context,
+                                      widget.editar
+                                          ? 'No se pudo editar la empresa'
+                                          : 'No se pudo crear la empresa',
+                                      Colors.red,
+                                    );
+                                  }
+                                } catch (e) {
+                                  print("Error: $e");
+                                  util.message(
+                                      context, 'Ocurrió un error', Colors.red);
+                                }
+                              }
+                            },
+                            child:
+                                Text(widget.editar ? "Actualizar" : "Guardar"),
+                          ),
+                        )
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
